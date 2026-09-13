@@ -1,10 +1,10 @@
-name: Release v2.0.0 Beta
+name: Release v2.0.1 Beta
 
 on:
   push:
     branches: ['feature/seo-suite-v2']
     paths:
-      - '.github/release-beta-2.0.0-b5'
+      - '.github/release-beta-2.0.1-b1'
 
 permissions:
   contents: write
@@ -36,23 +36,26 @@ jobs:
           grep -q '\$this->execute(' plugin/MGD_SEOoverride_Plugin/Migrations/Migration20260913000100.php
           grep -q 'kPluginAdminMenu' plugin/MGD_SEOoverride_Plugin/adminmenu/_common.php
           grep -q 'plugin-tab-' plugin/MGD_SEOoverride_Plugin/adminmenu/_common.php
-          bash scripts/build-release.sh 2.0.0 true false
-          unzip -l release/MGD_JTL_SEO-2.0.0.zip | grep -q 'MGD_SEOoverride_Plugin/info.xml'
-          unzip -l release/MGD_JTL_SEO-2.0.0.zip | grep -q 'MGD_SEOoverride_Plugin/Migrations/Migration20260913000100.php'
-          unzip -l release/MGD_JTL_SEO-2.0.0.zip | grep -q 'locale/de-DE/base.mo'
+          grep -q 'SafePageSpeedBoost' plugin/MGD_SEOoverride_Plugin/Bootstrap.php
+          grep -q 'Marketing_PageSpeed_Boost' plugin/MGD_SEOoverride_Plugin/info.xml
+          bash scripts/build-release.sh 2.0.1 true false
+          unzip -l release/MGD_JTL_SEO-2.0.1.zip | grep -q 'MGD_SEOoverride_Plugin/info.xml'
+          unzip -l release/MGD_JTL_SEO-2.0.1.zip | grep -q 'MGD_SEOoverride_Plugin/src/SafePageSpeedBoost.php'
+          unzip -l release/MGD_JTL_SEO-2.0.1.zip | grep -q 'MGD_SEOoverride_Plugin/Migrations/Migration20260913000100.php'
+          unzip -l release/MGD_JTL_SEO-2.0.1.zip | grep -q 'locale/de-DE/base.mo'
       - name: Create prerelease
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          TAG="v2.0.0-beta.5"
+          TAG="v2.0.1-beta.1"
           if gh release view "$TAG" >/dev/null 2>&1; then
             gh release delete "$TAG" --yes --cleanup-tag
           fi
           gh release create "$TAG" \
-            release/MGD_JTL_SEO-2.0.0.zip \
-            release/MGD_JTL_SEO-2.0.0.zip.sha256 \
-            release/MGD_JTL_SEO-2.0.0.manifest.json \
+            release/MGD_JTL_SEO-2.0.1.zip \
+            release/MGD_JTL_SEO-2.0.1.zip.sha256 \
+            release/MGD_JTL_SEO-2.0.1.manifest.json \
             --target "$GITHUB_SHA" \
             --prerelease \
-            --title "MGD JTL SEO & PageSpeed v2.0.0 Beta 5" \
-            --notes "Behebt das Admin-Tab-Routing nach POST-Aktionen. SEO-Audit, Crawl, PageSpeed, Bildoptimierung, 404-Aktionen und weitere Plugin-Formulare übermitteln jetzt die von JTL erwartete kPluginAdminMenu-Zuordnung und kehren nach dem Laden zum auslösenden Plugin-Tab zurück. Orientierung am offiziellen JTL-Demo-Plugin."
+            --title "MGD JTL SEO & PageSpeed v2.0.1 Beta 1" \
+            --notes "PageSpeed-Fokusbuild: neuer Safe PageSpeed Boost mit erweiterter OPC-LCP-Erkennung für CSS/::before-Hintergründe, automatischen intrinsischen Bildabmessungen gegen CLS und konservativem Lazy Loading unterhalb des sichtbaren Bereichs. Zusätzlich gibt es einen optionalen Marketing- & Tracking-Boost für GTM/gtag/Analytics und Smarketer. Zahlungs-, Checkout-, Consent- und CAPTCHA-Skripte bleiben geschützt. Interne Plugin-Version 2.0.1 ermöglicht ein sauberes Update von 2.0.0."
