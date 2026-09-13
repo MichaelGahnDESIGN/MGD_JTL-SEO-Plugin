@@ -4,7 +4,7 @@ on:
   push:
     branches: ['feature/seo-suite-v2']
     paths:
-      - '.github/release-beta-2.0.0-b4'
+      - '.github/release-beta-2.0.0-b5'
 
 permissions:
   contents: write
@@ -34,6 +34,8 @@ jobs:
           '
           find plugin/MGD_SEOoverride_Plugin -name '*.php' -print0 | xargs -0 -n1 php -l
           grep -q '\$this->execute(' plugin/MGD_SEOoverride_Plugin/Migrations/Migration20260913000100.php
+          grep -q 'kPluginAdminMenu' plugin/MGD_SEOoverride_Plugin/adminmenu/_common.php
+          grep -q 'plugin-tab-' plugin/MGD_SEOoverride_Plugin/adminmenu/_common.php
           bash scripts/build-release.sh 2.0.0 true false
           unzip -l release/MGD_JTL_SEO-2.0.0.zip | grep -q 'MGD_SEOoverride_Plugin/info.xml'
           unzip -l release/MGD_JTL_SEO-2.0.0.zip | grep -q 'MGD_SEOoverride_Plugin/Migrations/Migration20260913000100.php'
@@ -42,7 +44,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          TAG="v2.0.0-beta.4"
+          TAG="v2.0.0-beta.5"
           if gh release view "$TAG" >/dev/null 2>&1; then
             gh release delete "$TAG" --yes --cleanup-tag
           fi
@@ -52,5 +54,5 @@ jobs:
             release/MGD_JTL_SEO-2.0.0.manifest.json \
             --target "$GITHUB_SHA" \
             --prerelease \
-            --title "MGD JTL SEO & PageSpeed v2.0.0 Beta 4" \
-            --notes "JTL-Shop-5.7.2-Kompatibilitätsbuild. Die Datenbankmigration nutzt jetzt die offizielle JTL Migration::execute()-API entsprechend der JTL-Plugin-Dokumentation. Die CI prüft gezielt gegen den offiziellen JTL-Shop-5.7.2-Core sowie ZIP-Struktur, info.xml und Migrationen."
+            --title "MGD JTL SEO & PageSpeed v2.0.0 Beta 5" \
+            --notes "Behebt das Admin-Tab-Routing nach POST-Aktionen. SEO-Audit, Crawl, PageSpeed, Bildoptimierung, 404-Aktionen und weitere Plugin-Formulare übermitteln jetzt die von JTL erwartete kPluginAdminMenu-Zuordnung und kehren nach dem Laden zum auslösenden Plugin-Tab zurück. Orientierung am offiziellen JTL-Demo-Plugin."
