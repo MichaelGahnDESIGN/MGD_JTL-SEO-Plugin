@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jtlshopplugin>
-    <Name>MGD JTL SEO &amp; PageSpeed</Name>
+    <Name>MGD_JTL_SEO_PageSpeed</Name>
     <Description>Technisches SEO, Core Web Vitals, PageSpeed, Shop-Crawling und sichere Performance-Optimierungen für JTL-Shop 5.</Description>
     <Author>Michael Gahn DESIGN</Author>
     <URL>https://Michael-Gahn.de</URL>
@@ -12,10 +12,10 @@
     <Install>
         <Adminmenu>
             <Customlink sort="1"><Name>Dashboard</Name><Filename>dashboard.php</Filename></Customlink>
-            <Customlink sort="2"><Name>SEO Audit</Name><Filename>seo-audit.php</Filename></Customlink>
-            <Customlink sort="3"><Name>Performance &amp; Core Web Vitals</Name><Filename>performance.php</Filename></Customlink>
-            <Customlink sort="4"><Name>Crawl &amp; Links</Name><Filename>crawler.php</Filename></Customlink>
-            <Customlink sort="5"><Name>Redirects &amp; 404</Name><Filename>redirects.php</Filename></Customlink>
+            <Customlink sort="2"><Name>SEO-Audit</Name><Filename>seo-audit.php</Filename></Customlink>
+            <Customlink sort="3"><Name>Performance-Core-Web-Vitals</Name><Filename>performance.php</Filename></Customlink>
+            <Customlink sort="4"><Name>Crawl-Links</Name><Filename>crawler.php</Filename></Customlink>
+            <Customlink sort="5"><Name>Redirects-404</Name><Filename>redirects.php</Filename></Customlink>
             <Customlink sort="6"><Name>Updates</Name><Filename>updates.php</Filename></Customlink>
             <Customlink sort="7"><Name>Impressum</Name><Filename>impressum.php</Filename></Customlink>
             <Settingslink sort="8">
