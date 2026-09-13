@@ -7,6 +7,9 @@ msgstr ""
 msgid "Plugin_aktiv"
 msgstr "Plugin aktiv"
 
+msgid "Safe_PageSpeed_Boost"
+msgstr "Safe PageSpeed Boost"
+
 msgid "LCP_Preload_Startseite"
 msgstr "LCP-Preload auf Startseite"
 
@@ -54,6 +57,9 @@ msgstr "Datensparsamen 404-Monitor aktivieren"
 
 msgid "Drittanbieter_Skripte_verzoegern"
 msgstr "Drittanbieter-Skripte verzögern"
+
+msgid "Marketing_PageSpeed_Boost"
+msgstr "Marketing- & Tracking-PageSpeed-Boost"
 
 msgid "Drittanbieter_Muster"
 msgstr "Drittanbieter-Muster für verzögertes Laden"
