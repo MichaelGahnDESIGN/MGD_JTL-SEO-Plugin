@@ -1,0 +1,21 @@
+name: Quality
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: PHP syntax
+        run: find plugin -name '*.php' -print0 | xargs -0 -n1 php -l
+      - name: Validate info.xml
+        run: php -r '$x=simplexml_load_file("plugin/MGD_SEOoverride_Plugin/info.xml"); if ($x===false) { exit(1); } echo "info.xml OK\n";'
+      - name: Build install ZIP
+        run: bash scripts/build-release.sh 1.1.0

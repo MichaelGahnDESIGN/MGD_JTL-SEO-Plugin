@@ -1,0 +1,32 @@
+name: Release v1.1.0
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/release-1.1.0'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate and build
+        run: bash scripts/build-release.sh 1.1.0
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view v1.1.0 >/dev/null 2>&1; then
+            echo "Release v1.1.0 exists already."
+            exit 0
+          fi
+          gh release create v1.1.0 \
+            release/MGD_JTL_SEO-1.1.0.zip \
+            release/MGD_JTL_SEO-1.1.0.zip.sha256 \
+            --target "$GITHUB_SHA" \
+            --title "MGD JTL SEO & PageSpeed v1.1.0" \
+            --notes-file RELEASE_NOTES_1.1.0.md
