@@ -4,7 +4,7 @@ on:
   push:
     branches: ['feature/seo-suite-v2']
     paths:
-      - '.github/release-beta-2.0.0'
+      - '.github/release-beta-2.0.0-b2'
 
 permissions:
   contents: write
@@ -18,13 +18,15 @@ jobs:
         with:
           php-version: '8.2'
           extensions: curl, dom, json, libxml, mbstring, simplexml, zip
-      - name: Validate and build
-        run: bash scripts/build-release.sh 2.0.0 true false
-      - name: Create or refresh prerelease
+      - name: Validate JTL naming and build
+        run: |
+          php -r '$x=simplexml_load_file("plugin/MGD_SEOoverride_Plugin/info.xml"); if(!$x){exit(1);} if(!preg_match("/^[a-zA-Z0-9_]+$/D",(string)$x->Name)){fwrite(STDERR,"invalid plugin Name\n");exit(2);} foreach($x->Install->Adminmenu->Customlink as $l){if(!preg_match("/^[a-zA-Z0-9_-]+$/D",(string)$l->Name)){fwrite(STDERR,"invalid customlink Name\n");exit(3);}}'
+          bash scripts/build-release.sh 2.0.0 true false
+      - name: Create prerelease
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          TAG="v2.0.0-beta.1"
+          TAG="v2.0.0-beta.2"
           if gh release view "$TAG" >/dev/null 2>&1; then
             gh release delete "$TAG" --yes --cleanup-tag
           fi
@@ -34,5 +36,5 @@ jobs:
             release/MGD_JTL_SEO-2.0.0.manifest.json \
             --target "$GITHUB_SHA" \
             --prerelease \
-            --title "MGD JTL SEO & PageSpeed v2.0.0 Beta 1" \
-            --notes "Testbuild für die neue 2.0-Suite. Enthält Technical SEO, PageSpeed-Verlauf, Crawler, Varianten-/Canonical-Audit, 404-Monitor, Tracking-/Drittanbieter-Delay, CSS-Diagnose, Critical-CSS-Unterstützung, Cache-Konfigurator und explizite Bildoptimierung mit Backup. Vor Produktiveinsatz Backup anlegen und Shopfunktionen testen."
+            --title "MGD JTL SEO & PageSpeed v2.0.0 Beta 2" \
+            --notes "Korrigierter JTL-Shop-Testbuild. Behebt Fehlercode 6 durch strikt JTL-konforme Plugin- und Adminlink-Namen und ergänzt CI-Prüfungen, damit solche Namensfehler künftig vor dem Release erkannt werden. Enthält weiterhin die komplette 2.0-Suite mit Technical SEO, PageSpeed-Verlauf, Crawler, 404-Monitor, Tracking-/Drittanbieter-Delay, CSS-Diagnose, Critical-CSS-Unterstützung, Cache-Konfigurator und Bildoptimierung mit Backup."
