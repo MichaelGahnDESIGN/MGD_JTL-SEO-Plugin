@@ -1,0 +1,108 @@
+name: JTL Shop 5.7 Compatibility
+
+on:
+  push:
+    branches: ['feature/seo-suite-v2']
+    paths:
+      - '.github/workflows/jtl-5.7-compat.yml'
+      - '.github/jtl-5.7-compat-trigger'
+      - 'plugin/**'
+      - 'scripts/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  jtl57:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: curl, dom, json, libxml, mbstring, simplexml, zip
+          tools: composer:v2
+
+      - name: Clone official JTL Shop 5.7.3 core
+        run: |
+          git clone --depth 1 --branch v5.7.3 https://gitlab.com/jtl-software/jtl-shop/core.git /tmp/jtl
+          echo "JTL commit: $(git -C /tmp/jtl rev-parse HEAD)"
+
+      - name: Show JTL plugin validation implementation
+        run: |
+          echo '=== Plugin/Migration related files ==='
+          find /tmp/jtl/includes/src/Plugin -maxdepth 3 -type f -name '*.php' -print | sort | head -n 120
+          echo '=== Validation/error references ==='
+          grep -RniE 'INVALID_MIGRATION|422|PluginID|plugin.?name|Migrations|ZipArchive' /tmp/jtl/includes/src/Plugin /tmp/jtl/admin 2>/dev/null | head -n 250 || true
+
+      - name: Install JTL Composer dependencies
+        working-directory: /tmp/jtl
+        run: composer install --no-interaction --prefer-dist --no-progress --no-scripts
+
+      - name: Validate plugin PHP against JTL autoloader
+        run: |
+          find plugin/MGD_SEOoverride_Plugin -name '*.php' -print0 | xargs -0 -n1 php -l
+          php <<'PHP'
+          <?php
+          require '/tmp/jtl/vendor/autoload.php';
+          require getcwd() . '/plugin/MGD_SEOoverride_Plugin/Migrations/Migration20260913000100.php';
+          $class = 'Plugin\\MGD_SEOoverride_Plugin\\Migrations\\Migration20260913000100';
+          if (!class_exists($class)) {
+              fwrite(STDERR, "Migration class not loadable\n");
+              exit(10);
+          }
+          if (!is_subclass_of($class, 'JTL\\Plugin\\Migration')) {
+              fwrite(STDERR, "Migration does not extend JTL Plugin Migration\n");
+              exit(11);
+          }
+          if (!in_array('JTL\\Update\\IMigration', class_implements($class), true)) {
+              fwrite(STDERR, "Migration does not implement IMigration\n");
+              exit(12);
+          }
+          $r = new ReflectionClass($class);
+          foreach (['up', 'down'] as $method) {
+              if (!$r->hasMethod($method)) {
+                  fwrite(STDERR, "Missing migration method: $method\n");
+                  exit(13);
+              }
+          }
+          echo "Migration class-load compatibility OK\n";
+          PHP
+
+      - name: Validate info.xml conventions and referenced files
+        run: |
+          php <<'PHP'
+          <?php
+          $root = getcwd() . '/plugin/MGD_SEOoverride_Plugin';
+          $x = simplexml_load_file($root . '/info.xml');
+          if (!$x) exit(20);
+          $id = (string)$x->PluginID;
+          if ($id !== basename($root)) {
+              fwrite(STDERR, "PluginID/folder mismatch\n"); exit(21);
+          }
+          if (!preg_match('/^[A-Za-z0-9_]+$/D', (string)$x->Name)) exit(22);
+          if (!preg_match('/^[A-Za-z0-9_]+$/D', $id)) exit(23);
+          foreach ($x->Install->Adminmenu->Customlink as $link) {
+              $name = (string)$link->Name;
+              $file = (string)$link->Filename;
+              if (!preg_match('/^[A-Za-z0-9_-]+$/D', $name)) {
+                  fwrite(STDERR, "Invalid customlink name: $name\n"); exit(24);
+              }
+              if (!is_file($root . '/adminmenu/' . $file)) {
+                  fwrite(STDERR, "Missing adminmenu file: $file\n"); exit(25);
+              }
+          }
+          foreach ($x->Install->Adminmenu->Settingslink->Setting as $setting) {
+              $name = (string)$setting->Name;
+              $valueName = (string)$setting->ValueName;
+              if (!preg_match('/^[A-Za-z0-9_-]+$/D', $name)) {
+                  fwrite(STDERR, "Invalid setting name: $name\n"); exit(26);
+              }
+              if ($valueName === '' || !preg_match('/^[A-Za-z0-9_-]+$/D', $valueName)) {
+                  fwrite(STDERR, "Invalid ValueName: $valueName\n"); exit(27);
+              }
+          }
+          echo "info.xml and referenced files OK\n";
+          PHP
