@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jtlshopplugin>
     <Name>MGD JTL SEO &amp; PageSpeed</Name>
-    <Description>Updatefeste Optimierungen für Core Web Vitals, PageSpeed und technisches SEO in JTL-Shop 5.</Description>
+    <Description>Technisches SEO, Core Web Vitals, PageSpeed, Shop-Crawling und sichere Performance-Optimierungen für JTL-Shop 5.</Description>
     <Author>Michael Gahn DESIGN</Author>
     <URL>https://Michael-Gahn.de</URL>
     <PluginID>MGD_SEOoverride_Plugin</PluginID>
     <XMLVersion>100</XMLVersion>
     <MinShopVersion>5.7.0</MinShopVersion>
     <CreateDate>2026-09-13</CreateDate>
-    <Version>1.1.0</Version>
+    <Version>2.0.0</Version>
     <Install>
         <Adminmenu>
             <Customlink sort="1"><Name>Dashboard</Name><Filename>dashboard.php</Filename></Customlink>
-            <Customlink sort="2"><Name>PageSpeed</Name><Filename>pagespeed.php</Filename></Customlink>
-            <Customlink sort="3"><Name>Updates</Name><Filename>updates.php</Filename></Customlink>
-            <Customlink sort="4"><Name>Impressum</Name><Filename>impressum.php</Filename></Customlink>
-            <Settingslink sort="5">
+            <Customlink sort="2"><Name>SEO Audit</Name><Filename>seo-audit.php</Filename></Customlink>
+            <Customlink sort="3"><Name>Performance &amp; Core Web Vitals</Name><Filename>performance.php</Filename></Customlink>
+            <Customlink sort="4"><Name>Crawl &amp; Links</Name><Filename>crawler.php</Filename></Customlink>
+            <Customlink sort="5"><Name>Redirects &amp; 404</Name><Filename>redirects.php</Filename></Customlink>
+            <Customlink sort="6"><Name>Updates</Name><Filename>updates.php</Filename></Customlink>
+            <Customlink sort="7"><Name>Impressum</Name><Filename>impressum.php</Filename></Customlink>
+            <Settingslink sort="8">
                 <Name>Einstellungen</Name>
                 <Setting type="selectbox" initialValue="Y" sort="10" conf="Y">
-                    <Name>Plugin aktiv</Name><Description>Aktiviert oder deaktiviert alle Frontend-Optimierungen des Plugins.</Description><ValueName>mgd_enabled</ValueName>
+                    <Name>Plugin aktiv</Name><Description>Aktiviert oder deaktiviert die Frontend-Optimierungen des Plugins. Diagnosebereiche im Backend bleiben unabhängig davon nutzbar.</Description><ValueName>mgd_enabled</ValueName>
                     <SelectboxOptions><Option value="Y" sort="1">Ja</Option><Option value="N" sort="2">Nein</Option></SelectboxOptions>
                 </Setting>
                 <Setting type="selectbox" initialValue="Y" sort="20" conf="Y">
@@ -50,14 +53,31 @@
                     <Name>Preconnect-Ursprünge</Name><Description>Optional: pro Zeile ein Origin wie https://example-cdn.de. Nur für tatsächlich früh benötigte Drittanbieter verwenden.</Description><ValueName>mgd_preconnect_origins</ValueName>
                 </Setting>
                 <Setting type="textarea" initialValue="" sort="100" conf="Y">
-                    <Name>JavaScript-Muster für defer</Name><Description>Experimentell: pro Zeile ein Teilstring einer Script-URL. jQuery und Checkout-Skripte nicht ohne vollständigen Funktionstest eintragen.</Description><ValueName>mgd_defer_js_patterns</ValueName>
+                    <Name>JavaScript-Muster für defer</Name><Description>Experimentell: pro Zeile ein Teilstring einer Script-URL. jQuery, Checkout, Consent und Zahlungsskripte nicht ohne vollständigen Funktionstest eintragen.</Description><ValueName>mgd_defer_js_patterns</ValueName>
                 </Setting>
                 <Setting type="selectbox" initialValue="Y" sort="110" conf="Y">
                     <Name>GitHub-Updatehinweise</Name><Description>Prüft höchstens alle zwölf Stunden öffentliche GitHub-Release-Metadaten. Es werden keine Shop- oder Kundendaten übertragen.</Description><ValueName>mgd_update_notices</ValueName>
                     <SelectboxOptions><Option value="Y" sort="1">Ja</Option><Option value="N" sort="2">Nein</Option></SelectboxOptions>
                 </Setting>
+                <Setting type="selectbox" initialValue="Y" sort="120" conf="Y">
+                    <Name>Verifizierte Datei-Hotfixes erlauben</Name><Description>Erlaubt ausschließlich Releases, die im signierten Manifest als Self-Update-sicher markiert sind. Normale Versionsupdates mit info.xml- oder Migrationsänderungen bleiben im nativen JTL-Plugin-Manager.</Description><ValueName>mgd_safe_updates</ValueName>
+                    <SelectboxOptions><Option value="Y" sort="1">Ja</Option><Option value="N" sort="2">Nein</Option></SelectboxOptions>
+                </Setting>
+                <Setting type="text" initialValue="" sort="130" conf="Y">
+                    <Name>Google PageSpeed API-Key</Name><Description>Optional und empfohlen für regelmäßige PageSpeed-Messungen im Backend. Der Key wird in der JTL-Plugin-Konfiguration gespeichert, nicht im Frontend ausgegeben. Ohne Key kann die öffentliche API je nach Google-Quota eingeschränkt sein.</Description><ValueName>mgd_pagespeed_api_key</ValueName>
+                </Setting>
+                <Setting type="text" initialValue="50" sort="140" conf="Y">
+                    <Name>Maximale Seiten pro Crawl</Name><Description>Standard: 50. Erlaubter Bereich im Plugin: 5 bis 250. Jeder Crawl erzeugt echte HTTP-Anfragen an den eigenen Shop.</Description><ValueName>mgd_crawl_max_pages</ValueName>
+                </Setting>
+                <Setting type="text" initialValue="4" sort="150" conf="Y">
+                    <Name>Maximale Crawl-Tiefe</Name><Description>Standard: 4. Erlaubter Bereich: 1 bis 8.</Description><ValueName>mgd_crawl_max_depth</ValueName>
+                </Setting>
+                <Setting type="selectbox" initialValue="Y" sort="160" conf="Y">
+                    <Name>Datensparsamen 404-Monitor aktivieren</Name><Description>Speichert bei echten 404-Antworten nur den URL-Pfad, optional den internen Referrer-Pfad, Trefferzahl und Zeitpunkte. IP-Adressen, Query-Parameter, User-Agent und Kundendaten werden nicht gespeichert.</Description><ValueName>mgd_404_monitor</ValueName>
+                    <SelectboxOptions><Option value="Y" sort="1">Ja</Option><Option value="N" sort="2">Nein</Option></SelectboxOptions>
+                </Setting>
             </Settingslink>
         </Adminmenu>
-        <FlushTags>CACHING_GROUP_OPTION</FlushTags>
+        <FlushTags>CACHING_GROUP_OPTION,CACHING_GROUP_PLUGIN,CACHING_GROUP_TEMPLATE,CACHING_GROUP_OBJECT</FlushTags>
     </Install>
 </jtlshopplugin>
