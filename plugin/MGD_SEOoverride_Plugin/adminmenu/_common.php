@@ -78,6 +78,62 @@ if (!function_exists('mgdSeoEsc')) {
     function mgdSeoFooter(): void
     {
         echo '<p class="mgd-small">MGD JTL SEO &amp; PageSpeed · Michael Gahn DESIGN · GPL-3.0-or-later</p></div>';
+        echo <<<'HTML'
+<script>
+(function () {
+    if (window.__mgdSeoAdminFormRouting) {
+        return;
+    }
+    window.__mgdSeoAdminFormRouting = true;
+
+    function prepareForm(form) {
+        if (!(form instanceof HTMLFormElement)) {
+            return;
+        }
+        var method = (form.getAttribute('method') || 'get').toLowerCase();
+        if (method !== 'post' || !form.closest('.mgd-wrap')) {
+            return;
+        }
+
+        var pane = form.closest('[id^="plugin-tab-"]');
+        if (!pane) {
+            return;
+        }
+        var match = pane.id.match(/^plugin-tab-(\d+)$/);
+        if (!match) {
+            return;
+        }
+
+        var menuID = match[1];
+        var menuField = form.querySelector('input[name="kPluginAdminMenu"]');
+        if (!menuField) {
+            menuField = document.createElement('input');
+            menuField.type = 'hidden';
+            menuField.name = 'kPluginAdminMenu';
+            form.appendChild(menuField);
+        }
+        menuField.value = menuID;
+
+        var baseURL = window.location.href.split('#')[0];
+        form.setAttribute('action', baseURL + '#plugin-tab-' + menuID);
+    }
+
+    function bindAll() {
+        document.querySelectorAll('.mgd-wrap form').forEach(prepareForm);
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', bindAll, {once: true});
+    } else {
+        bindAll();
+    }
+
+    document.addEventListener('submit', function (event) {
+        prepareForm(event.target);
+    }, true);
+})();
+</script>
+HTML;
     }
 
     function mgdSeoRenderIssues(array $issues): string
