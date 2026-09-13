@@ -8,6 +8,7 @@ require_once dirname(__DIR__) . '/src/Audit/TechnicalSeoAudit.php';
 require_once dirname(__DIR__) . '/src/Audit/StructuredDataAudit.php';
 require_once dirname(__DIR__) . '/src/Storage/AuditHistoryRepository.php';
 
+use JTL\Shop;
 use Plugin\MGD_SEOoverride_Plugin\Src\Audit\HtmlAnalyzer;
 use Plugin\MGD_SEOoverride_Plugin\Src\Audit\StructuredDataAudit;
 use Plugin\MGD_SEOoverride_Plugin\Src\Audit\TechnicalSeoAudit;
@@ -38,7 +39,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $raw = $client->get($url, true, 12);
         $structured = (new StructuredDataAudit())->analyze($raw['body']);
         try {
-            (new AuditHistoryRepository($oPlugin->getDB()))->save('seo', $url, [
+            (new AuditHistoryRepository(Shop::Container()->getDB()))->save('seo', $url, [
                 'score' => $result['score'],
                 'status' => $result['status'],
                 'issues' => $result['issues'],
