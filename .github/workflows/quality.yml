@@ -36,6 +36,12 @@ jobs:
               $n=(string)$link->Name;
               if (!preg_match("/^[a-zA-Z0-9_-]+$/D", $n)) { fwrite(STDERR, "invalid Customlink Name: $n\n"); exit(5); }
             }
+            foreach ($x->Install->Adminmenu->Settingslink->Setting as $setting) {
+              $n=(string)$setting->Name;
+              if (!preg_match("/^[a-zA-Z0-9_-]+$/D", $n)) { fwrite(STDERR, "invalid Setting Name: $n\n"); exit(6); }
+              $v=(string)$setting->ValueName;
+              if (!preg_match("/^[a-zA-Z0-9_-]+$/D", $v)) { fwrite(STDERR, "invalid ValueName: $v\n"); exit(7); }
+            }
             echo "info.xml JTL naming OK, version ".$x->Version."\n";
           '
       - name: Build install ZIP and update manifest
