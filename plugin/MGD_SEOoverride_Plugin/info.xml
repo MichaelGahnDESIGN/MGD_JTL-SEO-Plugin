@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jtlshopplugin>
+    <Name>MGD JTL SEO &amp; PageSpeed</Name>
+    <Description>Updatefeste Optimierungen für Core Web Vitals, PageSpeed und technisches SEO in JTL-Shop 5.</Description>
+    <Author>Michael Gahn DESIGN</Author>
+    <URL>https://Michael-Gahn.de</URL>
+    <PluginID>MGD_SEOoverride_Plugin</PluginID>
+    <XMLVersion>100</XMLVersion>
+    <MinShopVersion>5.7.0</MinShopVersion>
+    <CreateDate>2026-09-13</CreateDate>
+    <Version>1.1.0</Version>
+    <Install>
+        <Adminmenu>
+            <Customlink sort="1"><Name>Dashboard</Name><Filename>dashboard.php</Filename></Customlink>
+            <Customlink sort="2"><Name>PageSpeed</Name><Filename>pagespeed.php</Filename></Customlink>
+            <Customlink sort="3"><Name>Updates</Name><Filename>updates.php</Filename></Customlink>
+            <Customlink sort="4"><Name>Impressum</Name><Filename>impressum.php</Filename></Customlink>
+            <Settingslink sort="5">
+                <Name>Einstellungen</Name>
+                <Setting type="selectbox" initialValue="Y" sort="10" conf="Y">
+                    <Name>Plugin aktiv</Name><Description>Aktiviert oder deaktiviert alle Frontend-Optimierungen des Plugins.</Description><ValueName>mgd_enabled</ValueName>
+                    <SelectboxOptions><Option value="Y" sort="1">Ja</Option><Option value="N" sort="2">Nein</Option></SelectboxOptions>
+                </Setting>
+                <Setting type="selectbox" initialValue="Y" sort="20" conf="Y">
+                    <Name>LCP-Preload auf Startseite</Name><Description>Erkennt das erste geeignete OPC-Hintergrundbild der Startseite und lädt es früh mit hoher Priorität.</Description><ValueName>mgd_lcp_preload</ValueName>
+                    <SelectboxOptions><Option value="Y" sort="1">Ja</Option><Option value="N" sort="2">Nein</Option></SelectboxOptions>
+                </Setting>
+                <Setting type="text" initialValue="" sort="30" conf="Y">
+                    <Name>LCP-Bild-URL</Name><Description>Optional: feste Bild-URL für den LCP-Preload. Leer lassen für automatische Erkennung.</Description><ValueName>mgd_lcp_image_url</ValueName>
+                </Setting>
+                <Setting type="selectbox" initialValue="Y" sort="40" conf="Y">
+                    <Name>Kleine lokale CSS-Dateien inline einbetten</Name><Description>Bindet sehr kleine lokale Stylesheets direkt im HTML ein, sofern dies ohne URL- oder Import-Abhängigkeiten sicher möglich ist.</Description><ValueName>mgd_inline_small_css</ValueName>
+                    <SelectboxOptions><Option value="Y" sort="1">Ja</Option><Option value="N" sort="2">Nein</Option></SelectboxOptions>
+                </Setting>
+                <Setting type="text" initialValue="4096" sort="50" conf="Y">
+                    <Name>Maximale Inline-CSS-Größe in Bytes</Name><Description>Empfohlen: 4096. Sicherer Bereich im Plugin: 512 bis 16384 Bytes.</Description><ValueName>mgd_inline_css_max_bytes</ValueName>
+                </Setting>
+                <Setting type="selectbox" initialValue="Y" sort="60" conf="Y">
+                    <Name>Bild-Decoding optimieren</Name><Description>Ergänzt decoding=async bei Bildern, wenn noch kein Decoding-Hinweis vorhanden ist.</Description><ValueName>mgd_async_image_decode</ValueName>
+                    <SelectboxOptions><Option value="Y" sort="1">Ja</Option><Option value="N" sort="2">Nein</Option></SelectboxOptions>
+                </Setting>
+                <Setting type="selectbox" initialValue="N" sort="70" conf="Y">
+                    <Name>Zusätzliches Lazy Loading</Name><Description>Optional: setzt loading=lazy nur bei späteren Inhaltsbildern. Erst nach Messung aktivieren.</Description><ValueName>mgd_lazy_images</ValueName>
+                    <SelectboxOptions><Option value="Y" sort="1">Ja</Option><Option value="N" sort="2">Nein</Option></SelectboxOptions>
+                </Setting>
+                <Setting type="text" initialValue="4" sort="80" conf="Y">
+                    <Name>Anzahl Bilder vor Lazy Loading überspringen</Name><Description>Die ersten Inhaltsbilder werden vom zusätzlichen Lazy Loading ausgenommen.</Description><ValueName>mgd_lazy_skip_images</ValueName>
+                </Setting>
+                <Setting type="textarea" initialValue="" sort="90" conf="Y">
+                    <Name>Preconnect-Ursprünge</Name><Description>Optional: pro Zeile ein Origin wie https://example-cdn.de. Nur für tatsächlich früh benötigte Drittanbieter verwenden.</Description><ValueName>mgd_preconnect_origins</ValueName>
+                </Setting>
+                <Setting type="textarea" initialValue="" sort="100" conf="Y">
+                    <Name>JavaScript-Muster für defer</Name><Description>Experimentell: pro Zeile ein Teilstring einer Script-URL. jQuery und Checkout-Skripte nicht ohne vollständigen Funktionstest eintragen.</Description><ValueName>mgd_defer_js_patterns</ValueName>
+                </Setting>
+                <Setting type="selectbox" initialValue="Y" sort="110" conf="Y">
+                    <Name>GitHub-Updatehinweise</Name><Description>Prüft höchstens alle zwölf Stunden öffentliche GitHub-Release-Metadaten. Es werden keine Shop- oder Kundendaten übertragen.</Description><ValueName>mgd_update_notices</ValueName>
+                    <SelectboxOptions><Option value="Y" sort="1">Ja</Option><Option value="N" sort="2">Nein</Option></SelectboxOptions>
+                </Setting>
+            </Settingslink>
+        </Adminmenu>
+        <FlushTags>CACHING_GROUP_OPTION</FlushTags>
+    </Install>
+</jtlshopplugin>
