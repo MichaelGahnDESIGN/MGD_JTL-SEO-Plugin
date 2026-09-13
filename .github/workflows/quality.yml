@@ -22,9 +22,22 @@ jobs:
           extensions: curl, dom, json, libxml, mbstring, simplexml, zip
       - name: PHP syntax
         run: find plugin -name '*.php' -print0 | xargs -0 -n1 php -l
-      - name: Validate info.xml and version
+      - name: Validate info.xml, JTL names and version
         run: |
-          php -r '$x=simplexml_load_file("plugin/MGD_SEOoverride_Plugin/info.xml"); if ($x===false) { exit(1); } if ((string)$x->PluginID !== "MGD_SEOoverride_Plugin") { exit(2); } if (!preg_match("/^\\d+\\.\\d+\\.\\d+$/", (string)$x->Version)) { exit(3); } echo "info.xml OK, version ".$x->Version."\n";'
+          php -r '
+            $x=simplexml_load_file("plugin/MGD_SEOoverride_Plugin/info.xml");
+            if ($x===false) { exit(1); }
+            $name=(string)$x->Name;
+            $id=(string)$x->PluginID;
+            if (!preg_match("/^[a-zA-Z0-9_]+$/D", $name)) { fwrite(STDERR, "invalid plugin Name: $name\n"); exit(2); }
+            if ($id !== "MGD_SEOoverride_Plugin" || !preg_match("/^[a-zA-Z0-9_]+$/D", $id)) { fwrite(STDERR, "invalid PluginID: $id\n"); exit(3); }
+            if (!preg_match("/^\\d+\\.\\d+\\.\\d+$/D", (string)$x->Version)) { exit(4); }
+            foreach ($x->Install->Adminmenu->Customlink as $link) {
+              $n=(string)$link->Name;
+              if (!preg_match("/^[a-zA-Z0-9_-]+$/D", $n)) { fwrite(STDERR, "invalid Customlink Name: $n\n"); exit(5); }
+            }
+            echo "info.xml JTL naming OK, version ".$x->Version."\n";
+          '
       - name: Build install ZIP and update manifest
         run: bash scripts/build-release.sh
       - name: Validate ZIP root
