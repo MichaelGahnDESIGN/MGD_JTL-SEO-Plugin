@@ -9,8 +9,7 @@ final class Migration20260913000100 extends Migration implements IMigration
 {
     public function up(): void
     {
-        $db = $this->getDB();
-        $db->getAffectedRows(<<<'SQL'
+        $this->execute(<<<'SQL'
             CREATE TABLE IF NOT EXISTS `xplugin_mgd_seo_history` (
                 `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
                 `kind` VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
@@ -22,9 +21,10 @@ final class Migration20260913000100 extends Migration implements IMigration
                 PRIMARY KEY (`id`),
                 KEY `idx_mgd_seo_history_kind_created` (`kind`, `created_at`),
                 KEY `idx_mgd_seo_history_url_hash` (`url_hash`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+            ) ENGINE=InnoDB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
             SQL);
-        $db->getAffectedRows(<<<'SQL'
+
+        $this->execute(<<<'SQL'
             CREATE TABLE IF NOT EXISTS `xplugin_mgd_seo_notfound` (
                 `path_hash` CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
                 `path` VARCHAR(2048) NOT NULL,
@@ -35,14 +35,13 @@ final class Migration20260913000100 extends Migration implements IMigration
                 PRIMARY KEY (`path_hash`),
                 KEY `idx_mgd_seo_notfound_last_seen` (`last_seen`),
                 KEY `idx_mgd_seo_notfound_hits` (`hits`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+            ) ENGINE=InnoDB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
             SQL);
     }
 
     public function down(): void
     {
-        $db = $this->getDB();
-        $db->getAffectedRows('DROP TABLE IF EXISTS `xplugin_mgd_seo_notfound`');
-        $db->getAffectedRows('DROP TABLE IF EXISTS `xplugin_mgd_seo_history`');
+        $this->execute('DROP TABLE IF EXISTS `xplugin_mgd_seo_notfound`');
+        $this->execute('DROP TABLE IF EXISTS `xplugin_mgd_seo_history`');
     }
 }
