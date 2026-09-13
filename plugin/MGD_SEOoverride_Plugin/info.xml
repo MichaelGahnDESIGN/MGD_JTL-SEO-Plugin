@@ -8,7 +8,7 @@
     <XMLVersion>100</XMLVersion>
     <MinShopVersion>5.7.0</MinShopVersion>
     <CreateDate>2026-09-13</CreateDate>
-    <Version>2.0.0</Version>
+    <Version>2.0.1</Version>
     <Install>
         <Adminmenu>
             <Customlink sort="1"><Name>Dashboard</Name><Filename>dashboard.php</Filename></Customlink>
@@ -22,6 +22,10 @@
                 <Name>Einstellungen</Name>
                 <Setting type="selectbox" initialValue="Y" sort="10" conf="Y">
                     <Name>Plugin_aktiv</Name><Description>Aktiviert oder deaktiviert die Frontend-Optimierungen des Plugins. Diagnosebereiche im Backend bleiben unabhängig davon nutzbar.</Description><ValueName>mgd_enabled</ValueName>
+                    <SelectboxOptions><Option value="Y" sort="1">Ja</Option><Option value="N" sort="2">Nein</Option></SelectboxOptions>
+                </Setting>
+                <Setting type="selectbox" initialValue="Y" sort="15" conf="Y">
+                    <Name>Safe_PageSpeed_Boost</Name><Description>Empfohlener, konservativer Boost: verbessert die Erkennung von OPC-LCP-Hintergrundbildern, ergänzt intrinsische Bildabmessungen gegen CLS und lädt spätere Inhaltsbilder nativ lazy. JTL-Core-JavaScript und große Theme-Stylesheets werden nicht automatisch verschoben.</Description><ValueName>mgd_safe_pagespeed_boost</ValueName>
                     <SelectboxOptions><Option value="Y" sort="1">Ja</Option><Option value="N" sort="2">Nein</Option></SelectboxOptions>
                 </Setting>
                 <Setting type="selectbox" initialValue="Y" sort="20" conf="Y">
@@ -43,11 +47,11 @@
                     <SelectboxOptions><Option value="Y" sort="1">Ja</Option><Option value="N" sort="2">Nein</Option></SelectboxOptions>
                 </Setting>
                 <Setting type="selectbox" initialValue="N" sort="70" conf="Y">
-                    <Name>Lazy_Loading</Name><Description>Optional: setzt loading=lazy nur bei späteren Inhaltsbildern. Erst nach Messung aktivieren.</Description><ValueName>mgd_lazy_images</ValueName>
+                    <Name>Lazy_Loading</Name><Description>Zusätzlicher Legacy-Schalter für Lazy Loading. Der Safe PageSpeed Boost übernimmt bereits konservatives natives Lazy Loading für spätere Inhaltsbilder.</Description><ValueName>mgd_lazy_images</ValueName>
                     <SelectboxOptions><Option value="Y" sort="1">Ja</Option><Option value="N" sort="2">Nein</Option></SelectboxOptions>
                 </Setting>
                 <Setting type="text" initialValue="4" sort="80" conf="Y">
-                    <Name>Lazy_Skip</Name><Description>Die ersten Inhaltsbilder werden vom zusätzlichen Lazy Loading ausgenommen.</Description><ValueName>mgd_lazy_skip_images</ValueName>
+                    <Name>Lazy_Skip</Name><Description>Anzahl früher Inhaltsbilder, die vom automatischen Lazy Loading und niedriger Fetch-Priorität ausgenommen werden.</Description><ValueName>mgd_lazy_skip_images</ValueName>
                 </Setting>
                 <Setting type="textarea" initialValue="" sort="90" conf="Y">
                     <Name>Preconnect_Urspruenge</Name><Description>Optional: pro Zeile ein Origin wie https://example-cdn.de. Nur für tatsächlich früh benötigte Drittanbieter verwenden.</Description><ValueName>mgd_preconnect_origins</ValueName>
@@ -85,11 +89,15 @@
                         <Option value="interaction_or_idle" sort="4">Interaktion oder Idle, je nachdem was zuerst eintritt</Option>
                     </SelectboxOptions>
                 </Setting>
+                <Setting type="selectbox" initialValue="N" sort="175" conf="Y">
+                    <Name>Marketing_PageSpeed_Boost</Name><Description>Optionaler stärkerer Boost für Google Tag Manager, gtag/Analytics und Smarketer. Bekannte Marketing-Skripte werden bis zur ersten Nutzerinteraktion oder Browser-Idle verzögert. Kann das Timing von Tracking verändern; nach Aktivierung Consent, Analytics und Conversion-Tracking testen.</Description><ValueName>mgd_marketing_pagespeed_boost</ValueName>
+                    <SelectboxOptions><Option value="Y" sort="1">Ja</Option><Option value="N" sort="2">Nein</Option></SelectboxOptions>
+                </Setting>
                 <Setting type="textarea" initialValue="" sort="180" conf="Y">
                     <Name>Drittanbieter_Muster</Name><Description>Pro Zeile oder komma-getrennt ein Host/Teilstring, z. B. googletagmanager.com oder fast-static.smarketer.de. Nur nach Tracking- und Consent-Test aktivieren.</Description><ValueName>mgd_third_party_delay_patterns</ValueName>
                 </Setting>
                 <Setting type="text" initialValue="3500" sort="190" conf="Y">
-                    <Name>Drittanbieter_Idle_Timeout</Name><Description>Standard 3500 ms. Sicherer Bereich im Plugin: 500 bis 15000 ms.</Description><ValueName>mgd_third_party_idle_delay_ms</ValueName>
+                    <Name>Drittanbieter_Idle_Timeout</Name><Description>Standard 3500 ms. Sicherer Bereich im Plugin: 500 bis 15000 ms. Der Marketing PageSpeed Boost verwendet mindestens 6500 ms.</Description><ValueName>mgd_third_party_idle_delay_ms</ValueName>
                 </Setting>
                 <Setting type="textarea" initialValue="" sort="200" conf="Y">
                     <Name>Critical_CSS</Name><Description>Fortgeschritten: bereits geprüftes Above-the-fold-CSS inline ausgeben. Das Plugin generiert Critical CSS nicht blind automatisch. Maximal 64 KiB.</Description><ValueName>mgd_critical_css</ValueName>
