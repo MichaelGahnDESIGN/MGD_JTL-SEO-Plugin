@@ -5,7 +5,7 @@ on:
     branches: ['feature/seo-suite-v2']
     paths:
       - '.github/workflows/jtl-5.7-compat.yml'
-      - '.github/jtl-5.7-compat-trigger'
+      - '.github/jtl-5.7-compat-trigger*'
       - 'plugin/**'
       - 'scripts/**'
   workflow_dispatch:
@@ -29,44 +29,48 @@ jobs:
           git clone --depth 1 --branch v5.7.3 https://gitlab.com/jtl-software/jtl-shop/core.git /tmp/jtl
           echo "JTL commit: $(git -C /tmp/jtl rev-parse HEAD)"
 
-      - name: Inspect official JTL plugin internals
+      - name: Inspect exact JTL migration API
         run: |
-          echo '===== JTL Migration.php ====='
-          sed -n '1,240p' /tmp/jtl/includes/src/Plugin/Migration.php
-          echo '===== JTL MigrationManager.php ====='
-          sed -n '1,320p' /tmp/jtl/includes/src/Plugin/Admin/Installation/MigrationManager.php
-          echo '===== JTL Bootstrapper validation item ====='
-          sed -n '1,220p' /tmp/jtl/includes/src/Plugin/Admin/Validation/Items/Bootstrapper.php
-          echo '===== JTL base Bootstrapper ====='
-          sed -n '1,280p' /tmp/jtl/includes/src/Plugin/Bootstrapper.php
-          echo '===== JTL Installer migration/update section ====='
-          sed -n '240,470p' /tmp/jtl/includes/src/Plugin/Admin/Installation/Installer.php
-          echo '===== JTL PluginValidator ====='
-          sed -n '1,180p' /tmp/jtl/includes/src/Plugin/Admin/Validation/PluginValidator.php
-          echo '===== Autoload/composer locations ====='
-          find /tmp/jtl -maxdepth 4 \( -name composer.json -o -name autoload.php \) -print | sort | head -n 100
+          echo '===== JTL Plugin Migration.php ====='
+          cat /tmp/jtl/includes/src/Plugin/Migration.php
+          echo '===== JTL Update Migration.php ====='
+          sed -n '1,360p' /tmp/jtl/includes/src/Update/Migration.php
+          echo '===== JTL IMigration.php ====='
+          cat /tmp/jtl/includes/src/Update/IMigration.php
+          echo '===== JTL Plugin MigrationHelper.php ====='
+          sed -n '1,360p' /tmp/jtl/includes/src/Plugin/MigrationHelper.php
+          echo '===== JTL MigrationManager relevant block ====='
+          sed -n '150,330p' /tmp/jtl/includes/src/Plugin/Admin/Installation/MigrationManager.php
+          echo '===== JTL bootstrap validation ====='
+          cat /tmp/jtl/includes/src/Plugin/Admin/Validation/Items/Bootstrapper.php
+          echo '===== JTL upload/install references ====='
+          grep -RniE 'plugin.*upload|upload.*plugin|json_encode|jsonResponse|INVALID_MIGRATION|pluginPlausiIntern' /tmp/jtl/admin /tmp/jtl/includes/src/Plugin 2>/dev/null | head -n 400 || true
 
       - name: PHP syntax
         run: find plugin/MGD_SEOoverride_Plugin -name '*.php' -print0 | xargs -0 -n1 php -l
 
-      - name: Validate migration source contract
+      - name: Validate migration structure against JTL mapping
         run: |
           php <<'PHP'
           <?php
           $file = getcwd() . '/plugin/MGD_SEOoverride_Plugin/Migrations/Migration20260913000100.php';
+          $base = basename($file, '.php');
+          if (!preg_match('/^Migration([0-9]{14})$/D', $base, $m)) {
+              fwrite(STDERR, "Invalid migration filename: $base\n"); exit(10);
+          }
+          $expected = 'Plugin\\MGD_SEOoverride_Plugin\\Migrations\\' . $base;
           $src = file_get_contents($file);
-          $checks = [
-              'namespace Plugin\\MGD_SEOoverride_Plugin\\Migrations;' => 'migration namespace',
-              'extends Migration implements IMigration' => 'migration inheritance',
+          foreach ([
+              'namespace Plugin\\MGD_SEOoverride_Plugin\\Migrations;' => 'namespace',
+              'final class ' . $base . ' extends Migration implements IMigration' => 'class declaration',
               'function up' => 'up method',
               'function down' => 'down method',
-          ];
-          foreach ($checks as $needle => $label) {
+          ] as $needle => $label) {
               if (strpos($src, $needle) === false) {
-                  fwrite(STDERR, "Missing $label\n"); exit(10);
+                  fwrite(STDERR, "Missing $label for $expected\n"); exit(11);
               }
           }
-          echo "Migration source contract OK\n";
+          echo "Migration mapping OK: $expected\n";
           PHP
 
       - name: Validate info.xml conventions and referenced files
@@ -77,30 +81,18 @@ jobs:
           $x = simplexml_load_file($root . '/info.xml');
           if (!$x) exit(20);
           $id = (string)$x->PluginID;
-          if ($id !== basename($root)) {
-              fwrite(STDERR, "PluginID/folder mismatch\n"); exit(21);
-          }
+          if ($id !== basename($root)) { fwrite(STDERR, "PluginID/folder mismatch\n"); exit(21); }
           if (!preg_match('/^[A-Za-z0-9_]+$/D', (string)$x->Name)) exit(22);
           if (!preg_match('/^[A-Za-z0-9_]+$/D', $id)) exit(23);
           foreach ($x->Install->Adminmenu->Customlink as $link) {
-              $name = (string)$link->Name;
-              $file = (string)$link->Filename;
-              if (!preg_match('/^[A-Za-z0-9_-]+$/D', $name)) {
-                  fwrite(STDERR, "Invalid customlink name: $name\n"); exit(24);
-              }
-              if (!is_file($root . '/adminmenu/' . $file)) {
-                  fwrite(STDERR, "Missing adminmenu file: $file\n"); exit(25);
-              }
+              $name = (string)$link->Name; $file = (string)$link->Filename;
+              if (!preg_match('/^[A-Za-z0-9_-]+$/D', $name)) { fwrite(STDERR, "Invalid customlink: $name\n"); exit(24); }
+              if (!is_file($root . '/adminmenu/' . $file)) { fwrite(STDERR, "Missing adminmenu: $file\n"); exit(25); }
           }
           foreach ($x->Install->Adminmenu->Settingslink->Setting as $setting) {
-              $name = (string)$setting->Name;
-              $valueName = (string)$setting->ValueName;
-              if (!preg_match('/^[A-Za-z0-9_-]+$/D', $name)) {
-                  fwrite(STDERR, "Invalid setting name: $name\n"); exit(26);
-              }
-              if ($valueName === '' || !preg_match('/^[A-Za-z0-9_-]+$/D', $valueName)) {
-                  fwrite(STDERR, "Invalid ValueName: $valueName\n"); exit(27);
-              }
+              $name=(string)$setting->Name; $valueName=(string)$setting->ValueName;
+              if (!preg_match('/^[A-Za-z0-9_-]+$/D', $name)) { fwrite(STDERR, "Invalid setting: $name\n"); exit(26); }
+              if ($valueName==='' || !preg_match('/^[A-Za-z0-9_-]+$/D', $valueName)) { fwrite(STDERR, "Invalid ValueName: $valueName\n"); exit(27); }
           }
-          echo "info.xml and referenced files OK\n";
+          echo "info.xml OK\n";
           PHP
