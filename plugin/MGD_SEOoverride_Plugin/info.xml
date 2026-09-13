@@ -35,8 +35,8 @@
                     <Name>Kleine lokale CSS-Dateien inline einbetten</Name><Description>Bindet sehr kleine lokale Stylesheets direkt im HTML ein, sofern dies ohne URL- oder Import-Abhängigkeiten sicher möglich ist.</Description><ValueName>mgd_inline_small_css</ValueName>
                     <SelectboxOptions><Option value="Y" sort="1">Ja</Option><Option value="N" sort="2">Nein</Option></SelectboxOptions>
                 </Setting>
-                <Setting type="text" initialValue="4096" sort="50" conf="Y">
-                    <Name>Maximale Inline-CSS-Größe in Bytes</Name><Description>Empfohlen: 4096. Sicherer Bereich im Plugin: 512 bis 16384 Bytes.</Description><ValueName>mgd_inline_css_max_bytes</ValueName>
+                <Setting type="text" initialValue="8192" sort="50" conf="Y">
+                    <Name>Maximale Inline-CSS-Größe in Bytes</Name><Description>Empfohlen: 8192. Sicherer Bereich im Plugin: 512 bis 16384 Bytes. Damit können auch kleine Plugin-Stylesheets wie mgd-ai-labels.css inline ausgeliefert werden.</Description><ValueName>mgd_inline_css_max_bytes</ValueName>
                 </Setting>
                 <Setting type="selectbox" initialValue="Y" sort="60" conf="Y">
                     <Name>Bild-Decoding optimieren</Name><Description>Ergänzt decoding=async bei Bildern, wenn noch kein Decoding-Hinweis vorhanden ist.</Description><ValueName>mgd_async_image_decode</ValueName>
@@ -75,6 +75,30 @@
                 <Setting type="selectbox" initialValue="Y" sort="160" conf="Y">
                     <Name>Datensparsamen 404-Monitor aktivieren</Name><Description>Speichert bei echten 404-Antworten nur den URL-Pfad, optional den internen Referrer-Pfad, Trefferzahl und Zeitpunkte. IP-Adressen, Query-Parameter, User-Agent und Kundendaten werden nicht gespeichert.</Description><ValueName>mgd_404_monitor</ValueName>
                     <SelectboxOptions><Option value="Y" sort="1">Ja</Option><Option value="N" sort="2">Nein</Option></SelectboxOptions>
+                </Setting>
+                <Setting type="selectbox" initialValue="off" sort="170" conf="Y">
+                    <Name>Drittanbieter-Skripte verzögern</Name><Description>Optionaler Performance-Modus für ausdrücklich freigegebene Tracking-Skripte. Zahlungs-, Checkout-, Consent- und CAPTCHA-Skripte werden vom Plugin nicht verzögert. Standard: Aus.</Description><ValueName>mgd_third_party_delay_mode</ValueName>
+                    <SelectboxOptions>
+                        <Option value="off" sort="1">Aus</Option>
+                        <Option value="idle" sort="2">Nach Browser-Idle / Timeout</Option>
+                        <Option value="interaction" sort="3">Nach erster Benutzerinteraktion</Option>
+                        <Option value="interaction_or_idle" sort="4">Interaktion oder Idle, je nachdem was zuerst eintritt</Option>
+                    </SelectboxOptions>
+                </Setting>
+                <Setting type="textarea" initialValue="" sort="180" conf="Y">
+                    <Name>Drittanbieter-Muster für verzögertes Laden</Name><Description>Pro Zeile oder komma-getrennt ein Host/Teilstring, z. B. googletagmanager.com oder fast-static.smarketer.de. Nur nach Tracking- und Consent-Test aktivieren.</Description><ValueName>mgd_third_party_delay_patterns</ValueName>
+                </Setting>
+                <Setting type="text" initialValue="3500" sort="190" conf="Y">
+                    <Name>Idle-Timeout für Drittanbieter in Millisekunden</Name><Description>Standard 3500 ms. Sicherer Bereich im Plugin: 500 bis 15000 ms.</Description><ValueName>mgd_third_party_idle_delay_ms</ValueName>
+                </Setting>
+                <Setting type="textarea" initialValue="" sort="200" conf="Y">
+                    <Name>Critical CSS</Name><Description>Fortgeschritten: bereits geprüftes Above-the-fold-CSS inline ausgeben. Das Plugin generiert Critical CSS nicht blind automatisch. Maximal 64 KiB.</Description><ValueName>mgd_critical_css</ValueName>
+                </Setting>
+                <Setting type="textarea" initialValue="" sort="210" conf="Y">
+                    <Name>Stylesheet-Muster nachladen</Name><Description>Fortgeschritten: nur zusammen mit vorhandenem Critical CSS. Passende lokale Stylesheets werden als preload geladen und anschließend aktiviert. Haupttheme-CSS nur nach visueller Prüfung eintragen.</Description><ValueName>mgd_async_css_patterns</ValueName>
+                </Setting>
+                <Setting type="text" initialValue="82" sort="220" conf="Y">
+                    <Name>Bildoptimierer-Qualität</Name><Description>Qualität für explizit im Performance-Bereich optimierte lokale WebP/JPEG-Dateien. Bereich 55 bis 92, Empfehlung 80 bis 84. Vor jeder Ersetzung wird ein geschütztes Backup erstellt.</Description><ValueName>mgd_image_quality</ValueName>
                 </Setting>
             </Settingslink>
         </Adminmenu>
