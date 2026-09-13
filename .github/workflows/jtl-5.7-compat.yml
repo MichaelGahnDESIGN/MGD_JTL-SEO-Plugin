@@ -1,0 +1,95 @@
+name: JTL Shop 5.7.2 Compatibility
+
+on:
+  push:
+    branches: ['feature/seo-suite-v2']
+    paths:
+      - '.github/workflows/jtl-5.7-compat.yml'
+      - '.github/jtl-5.7-compat-trigger*'
+      - 'plugin/**'
+      - 'scripts/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  jtl572:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: curl, dom, json, libxml, mbstring, simplexml, zip
+
+      - name: Clone exact official JTL Shop 5.7.2 core
+        run: |
+          git clone --depth 1 --branch v5.7.2 https://gitlab.com/jtl-software/jtl-shop/core.git /tmp/jtl
+          echo "JTL commit: $(git -C /tmp/jtl rev-parse HEAD)"
+
+      - name: Verify exact JTL 5.7.2 APIs used by plugin
+        run: |
+          grep -q 'public function updated($oldVersion, $newVersion)' /tmp/jtl/includes/src/Plugin/Bootstrapper.php
+          grep -q 'public function getAffectedRows' /tmp/jtl/includes/src/DB/DbInterface.php
+          grep -q 'class Migration extends' /tmp/jtl/includes/src/Plugin/Migration.php
+          grep -q "MIGRATION_FILE_NAME_PATTERN = '/^Migration" /tmp/jtl/includes/src/Plugin/MigrationHelper.php
+          grep -q 'Version::parse($baseNode' /tmp/jtl/includes/src/Plugin/Admin/Validation/Items/SemVer.php
+          echo 'JTL 5.7.2 API checks OK'
+
+      - name: PHP syntax
+        run: find plugin/MGD_SEOoverride_Plugin -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: Validate migration structure against JTL 5.7.2 documentation
+        run: |
+          php <<'PHP'
+          <?php
+          $file = getcwd() . '/plugin/MGD_SEOoverride_Plugin/Migrations/Migration20260913000100.php';
+          $base = basename($file, '.php');
+          if (!preg_match('/^Migration([0-9]{14})$/D', $base, $m)) {
+              fwrite(STDERR, "Invalid migration filename: $base\n"); exit(10);
+          }
+          $expected = 'Plugin\\MGD_SEOoverride_Plugin\\Migrations\\' . $base;
+          $src = file_get_contents($file);
+          foreach ([
+              'namespace Plugin\\MGD_SEOoverride_Plugin\\Migrations;' => 'namespace',
+              'final class ' . $base . ' extends Migration implements IMigration' => 'class declaration',
+              'function up' => 'up method',
+              'function down' => 'down method',
+              '$this->execute(' => 'official JTL Migration::execute usage',
+          ] as $needle => $label) {
+              if (strpos($src, $needle) === false) {
+                  fwrite(STDERR, "Missing $label for $expected\n"); exit(11);
+              }
+          }
+          if (strpos($src, 'getAffectedRows(') !== false) {
+              fwrite(STDERR, "Migration must use the JTL Migration API instead of direct DDL calls\n"); exit(12);
+          }
+          echo "Migration mapping OK: $expected\n";
+          PHP
+
+      - name: Validate info.xml conventions and referenced files
+        run: |
+          php <<'PHP'
+          <?php
+          $root = getcwd() . '/plugin/MGD_SEOoverride_Plugin';
+          $x = simplexml_load_file($root . '/info.xml');
+          if (!$x) exit(20);
+          $id = (string)$x->PluginID;
+          if ($id !== basename($root)) { fwrite(STDERR, "PluginID/folder mismatch\n"); exit(21); }
+          if (!preg_match('/^[\w()\- ]+$/u', (string)$x->Name)) exit(22);
+          if (!preg_match('/^[A-Za-z0-9_]+$/D', $id)) exit(23);
+          if ((string)$x->MinShopVersion !== '5.7.0') { fwrite(STDERR, "Unexpected MinShopVersion\n"); exit(24); }
+          foreach ($x->Install->Adminmenu->Customlink as $link) {
+              $name = (string)$link->Name; $file = (string)$link->Filename;
+              if (!preg_match('/^[A-Za-z0-9_\- ]+$/D', $name)) { fwrite(STDERR, "Invalid customlink: $name\n"); exit(25); }
+              if (!is_file($root . '/adminmenu/' . $file)) { fwrite(STDERR, "Missing adminmenu: $file\n"); exit(26); }
+          }
+          foreach ($x->Install->Adminmenu->Settingslink->Setting as $setting) {
+              $name=(string)$setting->Name; $valueName=(string)$setting->ValueName;
+              if (!preg_match('/^[A-Za-z0-9_-]+$/D', $name)) { fwrite(STDERR, "Invalid setting: $name\n"); exit(27); }
+              if ($valueName==='' || !preg_match('/^[A-Za-z0-9_-]+$/D', $valueName)) { fwrite(STDERR, "Invalid ValueName: $valueName\n"); exit(28); }
+          }
+          echo "info.xml OK\n";
+          PHP

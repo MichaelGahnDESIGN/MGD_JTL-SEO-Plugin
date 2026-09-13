@@ -1,0 +1,77 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: de_DE\n"
+"X-Domain: MGD_SEOoverride_Plugin\n"
+
+msgid "Plugin_aktiv"
+msgstr "Plugin aktiv"
+
+msgid "Safe_PageSpeed_Boost"
+msgstr "Safe PageSpeed Boost"
+
+msgid "LCP_Preload_Startseite"
+msgstr "LCP-Preload auf Startseite"
+
+msgid "LCP_Bild_URL"
+msgstr "LCP-Bild-URL"
+
+msgid "Kleine_CSS_inline"
+msgstr "Kleine lokale CSS-Dateien inline einbetten"
+
+msgid "Maximale_Inline_CSS_Groesse"
+msgstr "Maximale Inline-CSS-Größe in Bytes"
+
+msgid "Bild_Decoding"
+msgstr "Bild-Decoding optimieren"
+
+msgid "Lazy_Loading"
+msgstr "Zusätzliches Lazy Loading"
+
+msgid "Lazy_Skip"
+msgstr "Anzahl Bilder vor Lazy Loading überspringen"
+
+msgid "Preconnect_Urspruenge"
+msgstr "Preconnect-Ursprünge"
+
+msgid "JavaScript_Defer_Muster"
+msgstr "JavaScript-Muster für defer"
+
+msgid "GitHub_Updatehinweise"
+msgstr "GitHub-Updatehinweise"
+
+msgid "Verifizierte_Datei_Hotfixes"
+msgstr "Verifizierte Datei-Hotfixes erlauben"
+
+msgid "Google_PageSpeed_API_Key"
+msgstr "Google PageSpeed API-Key"
+
+msgid "Maximale_Seiten_Crawl"
+msgstr "Maximale Seiten pro Crawl"
+
+msgid "Maximale_Crawl_Tiefe"
+msgstr "Maximale Crawl-Tiefe"
+
+msgid "Datensparsamer_404_Monitor"
+msgstr "Datensparsamen 404-Monitor aktivieren"
+
+msgid "Drittanbieter_Skripte_verzoegern"
+msgstr "Drittanbieter-Skripte verzögern"
+
+msgid "Marketing_PageSpeed_Boost"
+msgstr "Marketing- & Tracking-PageSpeed-Boost"
+
+msgid "Drittanbieter_Muster"
+msgstr "Drittanbieter-Muster für verzögertes Laden"
+
+msgid "Drittanbieter_Idle_Timeout"
+msgstr "Idle-Timeout für Drittanbieter in Millisekunden"
+
+msgid "Critical_CSS"
+msgstr "Critical CSS"
+
+msgid "Stylesheet_Muster_nachladen"
+msgstr "Stylesheet-Muster nachladen"
+
+msgid "Bildoptimierer_Qualitaet"
+msgstr "Bildoptimierer-Qualität"

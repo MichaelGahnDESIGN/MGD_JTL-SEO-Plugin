@@ -1,0 +1,71 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: en_US\n"
+"X-Domain: MGD_SEOoverride_Plugin\n"
+
+msgid "Plugin_aktiv"
+msgstr "Plugin enabled"
+
+msgid "LCP_Preload_Startseite"
+msgstr "LCP preload on homepage"
+
+msgid "LCP_Bild_URL"
+msgstr "LCP image URL"
+
+msgid "Kleine_CSS_inline"
+msgstr "Inline small local CSS files"
+
+msgid "Maximale_Inline_CSS_Groesse"
+msgstr "Maximum inline CSS size in bytes"
+
+msgid "Bild_Decoding"
+msgstr "Optimize image decoding"
+
+msgid "Lazy_Loading"
+msgstr "Additional lazy loading"
+
+msgid "Lazy_Skip"
+msgstr "Images to skip before lazy loading"
+
+msgid "Preconnect_Urspruenge"
+msgstr "Preconnect origins"
+
+msgid "JavaScript_Defer_Muster"
+msgstr "JavaScript patterns for defer"
+
+msgid "GitHub_Updatehinweise"
+msgstr "GitHub update notices"
+
+msgid "Verifizierte_Datei_Hotfixes"
+msgstr "Allow verified file hotfixes"
+
+msgid "Google_PageSpeed_API_Key"
+msgstr "Google PageSpeed API key"
+
+msgid "Maximale_Seiten_Crawl"
+msgstr "Maximum pages per crawl"
+
+msgid "Maximale_Crawl_Tiefe"
+msgstr "Maximum crawl depth"
+
+msgid "Datensparsamer_404_Monitor"
+msgstr "Enable privacy-friendly 404 monitor"
+
+msgid "Drittanbieter_Skripte_verzoegern"
+msgstr "Delay third-party scripts"
+
+msgid "Drittanbieter_Muster"
+msgstr "Third-party delay patterns"
+
+msgid "Drittanbieter_Idle_Timeout"
+msgstr "Third-party idle timeout in milliseconds"
+
+msgid "Critical_CSS"
+msgstr "Critical CSS"
+
+msgid "Stylesheet_Muster_nachladen"
+msgstr "Stylesheet patterns to load asynchronously"
+
+msgid "Bildoptimierer_Qualitaet"
+msgstr "Image optimizer quality"
