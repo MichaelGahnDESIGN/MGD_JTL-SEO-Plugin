@@ -1,0 +1,38 @@
+name: Release v2.0.0 Beta
+
+on:
+  push:
+    branches: ['feature/seo-suite-v2']
+    paths:
+      - '.github/release-beta-2.0.0'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: curl, dom, json, libxml, mbstring, simplexml, zip
+      - name: Validate and build
+        run: bash scripts/build-release.sh 2.0.0 true false
+      - name: Create or refresh prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="v2.0.0-beta.1"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release delete "$TAG" --yes --cleanup-tag
+          fi
+          gh release create "$TAG" \
+            release/MGD_JTL_SEO-2.0.0.zip \
+            release/MGD_JTL_SEO-2.0.0.zip.sha256 \
+            release/MGD_JTL_SEO-2.0.0.manifest.json \
+            --target "$GITHUB_SHA" \
+            --prerelease \
+            --title "MGD JTL SEO & PageSpeed v2.0.0 Beta 1" \
+            --notes "Testbuild für die neue 2.0-Suite. Enthält Technical SEO, PageSpeed-Verlauf, Crawler, Varianten-/Canonical-Audit, 404-Monitor, Tracking-/Drittanbieter-Delay, CSS-Diagnose, Critical-CSS-Unterstützung, Cache-Konfigurator und explizite Bildoptimierung mit Backup. Vor Produktiveinsatz Backup anlegen und Shopfunktionen testen."
