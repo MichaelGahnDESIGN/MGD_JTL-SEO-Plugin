@@ -48,6 +48,16 @@ find "$PLUGIN" -name '*.php' -print0 | while IFS= read -r -d '' file; do
 done
 php -r '$x=simplexml_load_file($argv[1]); if($x===false){exit(1);} echo "info.xml OK\n";' "$PLUGIN/info.xml"
 
+# JTL nutzt gettext-Kompilate für übersetzte Settings. In CI/Release-Builds
+# werden vorhandene base.po-Dateien automatisch zu base.mo kompiliert.
+if command -v msgfmt >/dev/null 2>&1; then
+  while IFS= read -r -d '' po; do
+    mo="${po%.po}.mo"
+    msgfmt "$po" -o "$mo"
+    echo "Locale kompiliert: $mo"
+  done < <(find "$PLUGIN/locale" -name 'base.po' -print0 2>/dev/null || true)
+fi
+
 (
   cd "$ROOT/plugin"
   zip -qr "$ZIP" MGD_SEOoverride_Plugin
