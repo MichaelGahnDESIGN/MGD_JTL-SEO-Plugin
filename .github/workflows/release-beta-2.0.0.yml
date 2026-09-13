@@ -4,7 +4,7 @@ on:
   push:
     branches: ['feature/seo-suite-v2']
     paths:
-      - '.github/release-beta-2.0.0-b3'
+      - '.github/release-beta-2.0.0-b4'
 
 permissions:
   contents: write
@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: '8.4'
           extensions: curl, dom, json, libxml, mbstring, simplexml, zip
       - name: Install gettext
         run: sudo apt-get update && sudo apt-get install -y gettext
@@ -25,20 +25,24 @@ jobs:
           php -r '
             $x=simplexml_load_file("plugin/MGD_SEOoverride_Plugin/info.xml");
             if(!$x){exit(1);}
-            if(!preg_match("/^[a-zA-Z0-9_]+$/D",(string)$x->Name)){fwrite(STDERR,"invalid plugin Name\n");exit(2);}
-            foreach($x->Install->Adminmenu->Customlink as $l){if(!preg_match("/^[a-zA-Z0-9_-]+$/D",(string)$l->Name)){fwrite(STDERR,"invalid customlink Name\n");exit(3);}}
+            if(!preg_match("/^[\\w()\\- ]+$/u",(string)$x->Name)){fwrite(STDERR,"invalid plugin Name\n");exit(2);}
+            foreach($x->Install->Adminmenu->Customlink as $l){if(!preg_match("/^[a-zA-Z0-9_\\- ]+$/D",(string)$l->Name)){fwrite(STDERR,"invalid customlink Name\n");exit(3);}}
             foreach($x->Install->Adminmenu->Settingslink->Setting as $s){
               if(!preg_match("/^[a-zA-Z0-9_-]+$/D",(string)$s->Name)){fwrite(STDERR,"invalid setting Name: ".(string)$s->Name."\n");exit(4);}
               if(!preg_match("/^[a-zA-Z0-9_-]+$/D",(string)$s->ValueName)){fwrite(STDERR,"invalid ValueName\n");exit(5);}
             }
           '
+          find plugin/MGD_SEOoverride_Plugin -name '*.php' -print0 | xargs -0 -n1 php -l
+          grep -q '\$this->execute(' plugin/MGD_SEOoverride_Plugin/Migrations/Migration20260913000100.php
           bash scripts/build-release.sh 2.0.0 true false
+          unzip -l release/MGD_JTL_SEO-2.0.0.zip | grep -q 'MGD_SEOoverride_Plugin/info.xml'
+          unzip -l release/MGD_JTL_SEO-2.0.0.zip | grep -q 'MGD_SEOoverride_Plugin/Migrations/Migration20260913000100.php'
           unzip -l release/MGD_JTL_SEO-2.0.0.zip | grep -q 'locale/de-DE/base.mo'
       - name: Create prerelease
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          TAG="v2.0.0-beta.3"
+          TAG="v2.0.0-beta.4"
           if gh release view "$TAG" >/dev/null 2>&1; then
             gh release delete "$TAG" --yes --cleanup-tag
           fi
@@ -48,5 +52,5 @@ jobs:
             release/MGD_JTL_SEO-2.0.0.manifest.json \
             --target "$GITHUB_SHA" \
             --prerelease \
-            --title "MGD JTL SEO & PageSpeed v2.0.0 Beta 3" \
-            --notes "Korrigierter JTL-Shop-Testbuild. Sämtliche technischen Plugin-, Customlink-, Setting- und ValueName-Bezeichner entsprechen jetzt den dokumentierten JTL-Konventionen. Die sichtbaren Settings werden über gettext lokalisiert. CI prüft diese Regeln künftig vor jedem Release. Diese Version ersetzt Beta 2 für den Onvis-Test."
+            --title "MGD JTL SEO & PageSpeed v2.0.0 Beta 4" \
+            --notes "JTL-Shop-5.7.2-Kompatibilitätsbuild. Die Datenbankmigration nutzt jetzt die offizielle JTL Migration::execute()-API entsprechend der JTL-Plugin-Dokumentation. Die CI prüft gezielt gegen den offiziellen JTL-Shop-5.7.2-Core sowie ZIP-Struktur, info.xml und Migrationen."
