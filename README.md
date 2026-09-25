@@ -1,3 +1,16 @@
+<!-- MGD-HEADER -->
+<p align="center"><a href="https://Michael-Gahn.de"><img src="assets/mgd-logo.png" alt="Michael Gahn DESIGN" width="48"></a></p>
+
+<p align="center"><img src="assets/banner.svg" alt="MGD JTL SEO Plugin" width="100%"></p>
+
+<p align="center">
+  <img alt="Lizenz" src="https://img.shields.io/github/license/MichaelGahnDESIGN/MGD_JTL-SEO-Plugin?label=Lizenz">
+  <a href="https://github.com/MichaelGahnDESIGN/MGD_JTL-SEO-Plugin/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/MichaelGahnDESIGN/MGD_JTL-SEO-Plugin?label=Release"></a>
+  <img alt="Sprache" src="https://img.shields.io/badge/Sprache-PHP-2f6fed">
+  <a href="https://Michael-Gahn.de"><img alt="by Michael Gahn DESIGN" src="https://img.shields.io/badge/by-Michael%20Gahn%20DESIGN-cd1616"></a>
+</p>
+<!-- /MGD-HEADER -->
+
 # MGD JTL SEO & PageSpeed
 
 **Technisches SEO und Core-Web-Vitals-Optimierung für JTL-Shop 5.**
