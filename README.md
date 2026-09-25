@@ -165,3 +165,43 @@ Dieses Projekt wird unter der **GNU General Public License v3.0 oder später** v
 ## Haftungshinweis
 
 Das Plugin kann technische Optimierungen unterstützen, garantiert aber weder bestimmte PageSpeed-Werte noch Suchmaschinen-Rankings. Ergebnisse hängen unter anderem von Hosting, Template, Plugins, Drittanbietern, Bildern, Inhalten, Tracking und der jeweiligen Messumgebung ab.
+
+<!-- MGD-LEGAL -->
+---
+
+## Lizenz
+
+Dieses Projekt steht unter der [GNU GPL v3 oder neuer](https://www.gnu.org/licenses/gpl-3.0.html). Den vollständigen Text enthält die Datei [LICENSE](LICENSE).
+
+## Impressum
+
+**Angaben gemäß § 5 DDG (Digitale-Dienste-Gesetz)**
+
+Michael Gahn DESIGN  
+Michael Gahn  
+Dr.-Theodor-Brugsch Str. 12  
+08529 Plauen  
+Sachsen  
+Deutschland
+
+Tel.: +49 (0) 151 59156639  
+E-Mail: Anfrage@Michael-Gahn.de
+
+Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:  
+Steuernummer: 223/222/02451  
+Ust-ID: DE288143343
+
+Wir sind zur Teilnahme an einem Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle weder verpflichtet noch bereit.
+
+**Redaktionell verantwortlich:**
+
+Michael Gahn DESIGN  
+Michael Gahn  
+Dr.-Theodor-Brugsch Str. 12  
+08529 Plauen  
+Sachsen  
+Deutschland
+
+Tel.: +49 (0) 151 59156639  
+E-Mail: Anfrage@Michael-Gahn.de
+<!-- /MGD-LEGAL -->
