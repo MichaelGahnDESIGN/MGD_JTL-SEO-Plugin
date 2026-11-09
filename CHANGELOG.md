@@ -2,6 +2,24 @@
 
 Alle relevanten Änderungen an MGD JTL SEO & PageSpeed werden hier dokumentiert.
 
+## [Unveröffentlicht]
+
+### Hinzugefügt
+
+* MGD Update Client im Backend-Bereich **Updates**: signierte Update-Prüfung (Ed25519), Download nur nach Bestätigung, Prüfung von SHA-256, Größe und ZIP-Inhalt
+* Update-Prüfung nur nach Einschalten oder Klick, kein Hintergrund-Job
+* Zustand liegt im Shop-Ordner `templates_c/mgd-seo-update/` mit Zugriffssperre
+* Smoke-Test `tests/update-smoke.php` (ohne JTL lauffähig) und Schritt in der Qualitätsprüfung
+
+### Geändert
+
+* Die bisherige GitHub-Release-Prüfung wurde durch den Update Client ersetzt
+* Die Einstellung „GitHub-Updatehinweise“ entfällt
+
+### Hinweis
+
+Der Update-Kanal ist noch nicht eingerichtet: Blocker B1 (Schlüsselzeremonie fehlt, `update/root-keys.json` ohne Schlüssel) und B2 (Update-Server kennt das Produkt `mgd-jtl-seo` noch nicht). Bis dahin zeigt der Bereich „Update-Kanal noch nicht eingerichtet“. Installiert wird weiterhin nur über die JTL-Pluginverwaltung.
+
 ## [1.1.0] - 2026-09-13
 
 ### Hinzugefügt

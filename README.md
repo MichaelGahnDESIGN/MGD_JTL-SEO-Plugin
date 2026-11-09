@@ -50,15 +50,36 @@ Das Plugin enthält eigene, verständlich beschriftete Bereiche für:
 
 * **Dashboard** mit Status und sicheren Empfehlungen
 * **PageSpeed** mit Erklärungen zu LCP, Bildern, CSS, JavaScript und Caching
-* **Updates** mit GitHub-Release-Prüfung
+* **Updates** mit signierter Update-Prüfung (MGD Update Client)
 * **Impressum** mit Herstellerinformationen
 * **Einstellungen** für alle technischen Optimierungen
 
-### GitHub-Updater
+### Updates
 
-Das Plugin kann das öffentliche GitHub-Repository auf neue stabile Releases prüfen. Die Prüfung wird lokal zwischengespeichert und höchstens alle zwölf Stunden erneut durchgeführt. Es werden nur öffentliche Release-Metadaten abgefragt. Es werden keine Shop-, Kunden- oder Bestelldaten an GitHub übertragen.
+Im Backend gibt es den Punkt **Updates**. Er sagt dir, ob es eine neue Version gibt.
 
-Version 1.1.0 zeigt verfügbare Updates und den geprüften Release-Download an. Eine automatische Selbstinstallation ist bewusst noch nicht Bestandteil der ersten öffentlichen Version, da ein produktiver Shop keine ungeprüften Dateien selbst überschreiben sollte. Ein abgesicherter Ein-Klick-Updater mit Prüfsumme, Backup und Rollback ist für eine spätere Version vorgesehen.
+So geht es Schritt für Schritt:
+
+1. Öffne im JTL-Backend das Plugin und klicke auf **Updates**.
+2. Setze den Haken **Update-Prüfung einschalten** und klicke auf **Speichern**. Vorher fragt das Plugin nie im Netz nach.
+3. Klicke auf **Jetzt nach Updates suchen**. Auch dieser Klick löst genau eine Abfrage aus.
+4. Gibt es ein Update, setze den Haken zur Bestätigung und klicke auf **Paket herunterladen und prüfen**.
+5. Speichere die geprüfte ZIP-Datei und lade sie in der **JTL-Pluginverwaltung** hoch. Mache vorher eine Datensicherung.
+
+Das Plugin installiert **nie selbst**. Es tauscht keine Dateien aus und aktiviert nichts automatisch. Das macht nur JTL, wenn du die ZIP dort hochlädst.
+
+Was geprüft wird: digitale Signatur, Prüfsumme (SHA-256), Dateigröße und der Inhalt der ZIP. Ein Paket ohne gültige Signatur wird abgelehnt.
+
+Was gesendet wird: nur die IP-Adresse deines Servers (technisch nötig). Keine Besucher-, Kunden- oder Bestelldaten.
+
+Wo der Zustand liegt: im Ordner `templates_c/mgd-seo-update/` im Shop, mit Zugriffssperre (`.htaccess`).
+
+⚠️ Stand heute ist der Update-Kanal **noch nicht eingerichtet**. Dann steht im Bereich Updates: "Update-Kanal noch nicht eingerichtet". Das ist gewollt und kein Fehler. Gründe:
+
+* **B1:** Die Schlüssel für die Signatur sind noch nicht erzeugt (Schlüsselzeremonie). Die Datei `update/root-keys.json` hat deshalb noch keine Schlüssel.
+* **B2:** Der Update-Server kennt das Produkt `mgd-jtl-seo` noch nicht.
+
+Mehr dazu: Update-Client-Konzept im Repository MichaThemeV5-Pro (`docs/JTL-UPDATE-CLIENT.md`).
 
 ## Warum diese Optimierungen?
 
@@ -91,7 +112,6 @@ Das Plugin arbeitet deshalb nach dem Prinzip: **messen, gezielt optimieren, erne
 | Anzahl Bilder vor Lazy Loading | 4 |
 | Preconnect-Ursprünge | leer, nur gezielt ergänzen |
 | JavaScript-Muster für defer | leer, erst nach Funktionstest |
-| GitHub-Updatehinweise | Ja |
 
 ## Was das Plugin bewusst nicht automatisch macht
 
@@ -101,7 +121,7 @@ Auch jQuery oder andere zentrale JTL-Skripte werden nicht pauschal auf `defer` g
 
 ## Datenschutz
 
-Die Performance-Optimierungen laufen lokal im Shop. Nur wenn die Updateprüfung aktiviert ist, ruft der Server öffentliche Release-Metadaten von GitHub ab. Dabei erhält GitHub technisch die Server-IP, Zeitpunkt und den User-Agent des Requests. Das Plugin überträgt keine Kundendaten, Bestellungen, Formulareingaben oder Zugangsdaten.
+Die Performance-Optimierungen laufen lokal im Shop. Nur wenn du die Update-Prüfung einschaltest oder auf "Jetzt nach Updates suchen" klickst, fragt der Server den Update-Server von Michael Gahn DESIGN ab. Ein Download-Paket kommt von GitHub. Dabei sehen die Server technisch die Server-IP, den Zeitpunkt und den User-Agent des Requests. Das Plugin überträgt keine Kundendaten, Bestellungen, Formulareingaben oder Zugangsdaten.
 
 ## Projektstruktur
 
