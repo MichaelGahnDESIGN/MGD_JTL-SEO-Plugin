@@ -15,7 +15,7 @@
 
 **Technisches SEO und Core-Web-Vitals-Optimierung für JTL-Shop 5.**
 
-> Aktuelle Version: **1.1.0**  
+> Aktuelle Version: **1.1.1**  
 > Mindestversion: **JTL-Shop 5.7.0**  
 > Lizenz: **GPL-3.0-or-later**  
 > Hersteller: **Michael Gahn DESIGN**
@@ -74,7 +74,7 @@ Was gesendet wird: nur die IP-Adresse deines Servers (technisch nötig). Keine B
 
 Wo der Zustand liegt: im Ordner `templates_c/mgd-seo-update/` im Shop, mit Zugriffssperre (`.htaccess`).
 
-⚠️ Der Update-Kanal arbeitet im einfachen Modus: Eine kleine Textdatei auf theme.michael-gahn.de (`plugin-updates/mgd-jtl-seo.json`) nennt Version und SHA-256-Prüfsumme, das ZIP kommt von GitHub, die Prüfsumme wird beim Download nachgerechnet. Das ist eine Prüfsumme, keine Signatur. Solange die Textdatei noch nicht auf dem Server liegt, meldet der Bereich nur einen Fehler beim Abruf. Sonst passiert nichts. Zusätzlich gilt:
+⚠️ Der Update-Kanal arbeitet im einfachen Modus: Eine kleine Textdatei auf theme.michael-gahn.de (`plugin-updates/mgd-jtl-seo.json`) nennt Version und SHA-256-Prüfsumme, das ZIP kommt von GitHub, die Prüfsumme wird beim Download nachgerechnet. Das ist eine Prüfsumme, keine Signatur. Zusätzlich gilt:
 
 * Die signierte Variante (mit Schlüsseln in `update/root-keys.json`) ist vorbereitet, aber noch nicht aktiv.
 * Installiert wird weiterhin nur über die JTL-Pluginverwaltung.

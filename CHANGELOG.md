@@ -2,7 +2,7 @@
 
 Alle relevanten Änderungen an MGD JTL SEO & PageSpeed werden hier dokumentiert.
 
-## [Unveröffentlicht]
+## [1.1.1] - 2026-11-10
 
 ### Hinzugefügt
 
@@ -18,7 +18,7 @@ Alle relevanten Änderungen an MGD JTL SEO & PageSpeed werden hier dokumentiert.
 
 ### Hinweis
 
-Der Update-Kanal arbeitet im einfachen Modus: Eine kleine Textdatei auf theme.michael-gahn.de (`plugin-updates/mgd-jtl-seo.json`) nennt Version und SHA-256-Prüfsumme, das ZIP kommt von GitHub, die Prüfsumme wird beim Download nachgerechnet. Das ist eine Prüfsumme, keine Signatur. Solange die Textdatei noch nicht auf dem Server liegt, meldet der Bereich nur einen Fehler beim Abruf. Sonst passiert nichts. Installiert wird weiterhin nur über die JTL-Pluginverwaltung.
+Der Update-Kanal arbeitet im einfachen Modus: Eine kleine Textdatei auf theme.michael-gahn.de (`plugin-updates/mgd-jtl-seo.json`) nennt Version und SHA-256-Prüfsumme, das ZIP kommt von GitHub, die Prüfsumme wird beim Download nachgerechnet. Das ist eine Prüfsumme, keine Signatur. Installiert wird weiterhin nur über die JTL-Pluginverwaltung.
 
 ## [1.1.0] - 2026-09-13
 
