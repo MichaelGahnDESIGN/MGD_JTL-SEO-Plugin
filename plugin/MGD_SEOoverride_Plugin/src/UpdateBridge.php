@@ -12,6 +12,8 @@ final class UpdateBridge
     public const PRODUCT = 'mgd-jtl-seo';
     public const EDITION = 'free';
     public const PLUGIN_NAME = 'MGD JTL SEO & PageSpeed';
+    // Prüfsummen-Datei auf All-Inkl, einfacher Modus ohne Schlüssel
+    public const SIMPLE_URL = 'https://theme.michael-gahn.de/plugin-updates/mgd-jtl-seo.json';
     private const NAMESPACE_PREFIX = 'Plugin\\MGD_SEOoverride_Plugin\\Update\\';
 
     // Autoload für src/Update (Klassen sind generiert, kein JTL-Autoloader noetig)
@@ -85,6 +87,9 @@ final class UpdateBridge
             $csrfValid,
             $canManage,
             $csrfField,
+            null,
+            ['info.xml'],
+            self::SIMPLE_URL,
         );
     }
 }

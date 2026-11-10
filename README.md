@@ -74,10 +74,10 @@ Was gesendet wird: nur die IP-Adresse deines Servers (technisch nötig). Keine B
 
 Wo der Zustand liegt: im Ordner `templates_c/mgd-seo-update/` im Shop, mit Zugriffssperre (`.htaccess`).
 
-⚠️ Stand heute ist der Update-Kanal **noch nicht eingerichtet**. Dann steht im Bereich Updates: "Update-Kanal noch nicht eingerichtet". Das ist gewollt und kein Fehler. Gründe:
+⚠️ Der Update-Kanal arbeitet im einfachen Modus: Eine kleine Textdatei auf theme.michael-gahn.de (`plugin-updates/mgd-jtl-seo.json`) nennt Version und SHA-256-Prüfsumme, das ZIP kommt von GitHub, die Prüfsumme wird beim Download nachgerechnet. Das ist eine Prüfsumme, keine Signatur. Solange die Textdatei noch nicht auf dem Server liegt, meldet der Bereich nur einen Fehler beim Abruf. Sonst passiert nichts. Zusätzlich gilt:
 
-* **B1:** Die Schlüssel für die Signatur sind noch nicht erzeugt (Schlüsselzeremonie). Die Datei `update/root-keys.json` hat deshalb noch keine Schlüssel.
-* **B2:** Der Update-Server kennt das Produkt `mgd-jtl-seo` noch nicht.
+* Die signierte Variante (mit Schlüsseln in `update/root-keys.json`) ist vorbereitet, aber noch nicht aktiv.
+* Installiert wird weiterhin nur über die JTL-Pluginverwaltung.
 
 Mehr dazu: Update-Client-Konzept im Repository MichaThemeV5-Pro (`docs/JTL-UPDATE-CLIENT.md`).
 

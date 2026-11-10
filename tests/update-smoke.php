@@ -85,9 +85,13 @@ check('Download ohne Haken: Hinweis', str_contains($r['html'], 'Best'));
 check('Download ohne Haken: kein deliver', $r['deliver'] === null);
 
 // 7 Kanal nicht eingerichtet (B1): check_now liefert Meldung ohne Netz
-$c = ['csrf' => 0, 'right' => 0];
-$r = build($data, $plugin, true, true, $c)->handle('POST', ['mgd_update_action' => 'check_now']);
-check('B1: Kanal noch nicht eingerichtet', str_contains($r['html'], 'nicht eingerichtet') || str_contains($r['html'], 'eingerichtet'));
+// direkt ueber die Factory ohne Pruefsummen-Adresse, sonst ginge der Test ins Netz
+$bare = \Plugin\MGD_SEOoverride_Plugin\Update\Factory::page($plugin . '/update/root-keys.json', $data, UpdateBridge::PRODUCT, UpdateBridge::EDITION, UpdateBridge::PLUGIN_NAME, '1.1.0', 'shop.example.test', '5.8.0', static fn (): bool => true, static fn (): bool => true, '');
+$r = $bare->handle('POST', ['mgd_update_action' => 'check_now']);
+check('B1: Kanal noch nicht eingerichtet', str_contains($r['html'], 'nicht eingerichtet'));
+// einfacher Modus verdrahtet, nur statisch geprueft
+check('einfacher Modus: Adresse der Pruefsummen-Datei', UpdateBridge::SIMPLE_URL === 'https://theme.michael-gahn.de/plugin-updates/mgd-jtl-seo.json');
+check('einfacher Modus: Bridge gibt die Adresse weiter', str_contains((string)file_get_contents($plugin . '/src/UpdateBridge.php'), "['info.xml'],\n            self::SIMPLE_URL"));
 
 // 8 Datenordner geschuetzt, Produkt, Domain
 check('Datenordner unter templates_c', str_contains($data, '/templates_c/mgd-seo-update'));

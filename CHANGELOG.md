@@ -18,7 +18,7 @@ Alle relevanten Änderungen an MGD JTL SEO & PageSpeed werden hier dokumentiert.
 
 ### Hinweis
 
-Der Update-Kanal ist noch nicht eingerichtet: Blocker B1 (Schlüsselzeremonie fehlt, `update/root-keys.json` ohne Schlüssel) und B2 (Update-Server kennt das Produkt `mgd-jtl-seo` noch nicht). Bis dahin zeigt der Bereich „Update-Kanal noch nicht eingerichtet“. Installiert wird weiterhin nur über die JTL-Pluginverwaltung.
+Der Update-Kanal arbeitet im einfachen Modus: Eine kleine Textdatei auf theme.michael-gahn.de (`plugin-updates/mgd-jtl-seo.json`) nennt Version und SHA-256-Prüfsumme, das ZIP kommt von GitHub, die Prüfsumme wird beim Download nachgerechnet. Das ist eine Prüfsumme, keine Signatur. Solange die Textdatei noch nicht auf dem Server liegt, meldet der Bereich nur einen Fehler beim Abruf. Sonst passiert nichts. Installiert wird weiterhin nur über die JTL-Pluginverwaltung.
 
 ## [1.1.0] - 2026-09-13
 

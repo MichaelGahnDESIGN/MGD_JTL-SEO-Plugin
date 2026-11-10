@@ -32,6 +32,15 @@ final class UpdateClient
     public function check(): UpdateResult
     {
         if ($this->cfg->rootKeys->isEmpty()) {
+            // ohne Schlüssel: einfacher Modus mit Prüfsumme, falls Adresse gesetzt
+            if ($this->cfg->simpleUrl !== null && $this->cfg->edition === 'free') {
+                try {
+                    return $this->checkSimple($this->cfg->simpleUrl);
+                } catch (UpdateException $e) {
+                    return new UpdateResult('error', $e->getMessage());
+                }
+            }
+
             return new UpdateResult('not_configured', 'Update-Kanal noch nicht eingerichtet (Schlüssel fehlen).');
         }
         try {
@@ -114,6 +123,48 @@ final class UpdateClient
         $this->state->save(['keys_version' => $ver] + $st);
 
         return KeyRing::fromKeysPayload($v['data']);
+    }
+
+    // Einfacher Modus: Textdatei mit Version + SHA-256 (ohne Signatur). Download kommt von GitHub, Hash wird beim Download geprüft
+    private function checkSimple(string $url): UpdateResult
+    {
+        $res = $this->http->request('GET', $url, [], null, self::MAX_RESPONSE);
+        if ($res->status !== 200) {
+            throw new UpdateException('Update-Datei nicht abrufbar (HTTP ' . $res->status . ').');
+        }
+        $d = json_decode($res->body, true);
+        if (!is_array($d) || ($d['schema'] ?? null) !== 1 || ($d['product'] ?? null) !== $this->cfg->product) {
+            throw new UpdateException('Update-Datei gehört nicht zu diesem Plugin.');
+        }
+        $ver = $d['version'] ?? null;
+        $file = $d['filename'] ?? null;
+        $size = $d['size'] ?? null;
+        $sha = $d['sha256'] ?? null;
+        $root = $d['root_dir'] ?? null;
+        $dl = $d['download_url'] ?? null;
+        $ok = is_string($ver) && Manifest::isVersion($ver)
+            && is_string($file) && preg_match('/^[A-Za-z0-9._-]{1,120}\.zip$/', $file) === 1
+            && is_int($size) && $size > 0 && $size <= 52428800
+            && is_string($sha) && preg_match('/^[a-f0-9]{64}$/', $sha) === 1
+            && is_string($root) && preg_match('/^[A-Za-z0-9_.-]{1,80}$/', $root) === 1
+            && is_string($dl) && $this->downloadUrlAllowed($dl)
+            && str_starts_with((string) parse_url($dl, PHP_URL_PATH), '/MichaelGahnDESIGN/');
+        if (!$ok) {
+            throw new UpdateException('Update-Datei ist ungültig.');
+        }
+        if (Manifest::compare($ver, $this->cfg->installedVersion) <= 0) {
+            return new UpdateResult('up_to_date', 'Kein neueres Update verfügbar.');
+        }
+        $m = [
+            'version' => $ver,
+            'changelog_short' => is_string($d['changelog'] ?? null) ? mb_substr($d['changelog'], 0, 300) : null,
+            'package' => [
+                'filename' => $file, 'size' => $size, 'sha256' => $sha, 'root_dir' => $root,
+                'max_entries' => 2000, 'max_uncompressed' => 52428800,
+            ],
+        ];
+
+        return new UpdateResult('update_available', 'Update ' . $ver . ' verfügbar.', $m, $dl, ['mode' => 'simple']);
     }
 
     private function checkFree(KeyRing $ring): UpdateResult

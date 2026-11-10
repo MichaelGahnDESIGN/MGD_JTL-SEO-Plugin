@@ -27,11 +27,12 @@ final class Factory
         string $csrfField,
         ?LicenseProvider $license = null,
         array $requiredFiles = ['info.xml'],
+        ?string $simpleUrl = null,
     ): UpdatesPage {
         $raw = is_file($rootKeysFile) ? file_get_contents($rootKeysFile) : false;
         $data = is_string($raw) ? json_decode($raw, true) : null;
         $roots = KeyRing::fromRootFile(is_array($data) ? $data : []);
-        $cfg = new ClientConfig($product, $edition, $installedVersion, $domain, $roots, $dataDir, $shopVersion, $requiredFiles);
+        $cfg = new ClientConfig($product, $edition, $installedVersion, $domain, $roots, $dataDir, $shopVersion, $requiredFiles, ClientConfig::DEFAULT_BASE_URL, $simpleUrl);
         $store = new JsonFileStateStore(rtrim($dataDir, '/') . '/state.json');
         $client = new UpdateClient($cfg, new CurlHttpClient($cfg->allowedHosts(), $cfg->userAgent()), $license ?? new NullLicenseProvider(), $store);
 

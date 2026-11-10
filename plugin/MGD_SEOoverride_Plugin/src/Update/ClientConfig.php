@@ -30,9 +30,14 @@ final class ClientConfig
         public readonly string $shopVersion = '',
         public readonly array $requiredFiles = ['info.xml'],
         public readonly string $baseUrl = self::DEFAULT_BASE_URL,
+        // einfacher Modus: https-Adresse der Prüfsummen-Datei (ohne Schlüssel)
+        public readonly ?string $simpleUrl = null,
     ) {
         if (!in_array($edition, ['free', 'pro'], true) || !Manifest::isVersion($installedVersion)) {
             throw new \InvalidArgumentException('Edition oder installierte Version ungültig.');
+        }
+        if ($simpleUrl !== null && !str_starts_with($simpleUrl, 'https://')) {
+            throw new \InvalidArgumentException('Adresse der Prüfsummen-Datei muss https sein.');
         }
     }
 
@@ -44,7 +49,12 @@ final class ClientConfig
     /** @return list<string> */
     public function allowedHosts(): array
     {
-        return array_values(array_unique(array_merge([$this->host()], self::DOWNLOAD_HOSTS)));
+        $hosts = [$this->host()];
+        if ($this->simpleUrl !== null) {
+            $hosts[] = strtolower((string) parse_url($this->simpleUrl, PHP_URL_HOST));
+        }
+
+        return array_values(array_unique(array_merge($hosts, self::DOWNLOAD_HOSTS)));
     }
 
     public function userAgent(): string
