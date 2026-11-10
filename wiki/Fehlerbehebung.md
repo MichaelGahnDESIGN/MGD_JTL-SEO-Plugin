@@ -16,6 +16,6 @@ Deaktiviere `Kleine lokale CSS-Dateien inline einbetten`, leere den Cache und te
 
 Entferne alle Einträge aus `JavaScript-Muster für defer`. Diese Funktion ist experimentell und sollte nur für nachweislich unabhängige Skripte verwendet werden.
 
-## GitHub-Updateprüfung schlägt fehl
+## Update-Prüfung schlägt fehl
 
 Der Shopbetrieb wird dadurch nicht beeinflusst. Häufige Ursachen sind ausgehende Firewall-Regeln, fehlendes cURL, TLS-Probleme oder ein kurzfristiges GitHub-Limit.

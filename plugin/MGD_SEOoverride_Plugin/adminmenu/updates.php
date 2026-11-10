@@ -1,25 +1,54 @@
 <?php declare(strict_types=1);
 require __DIR__ . '/_common.php';
-require_once dirname(__DIR__) . '/src/Update/GitHubReleaseChecker.php';
+require_once dirname(__DIR__) . '/src/UpdateBridge.php';
 
-use Plugin\MGD_SEOoverride_Plugin\Src\Update\GitHubReleaseChecker;
+use JTL\Helpers\Form;
+use JTL\Shop;
+use Plugin\MGD_SEOoverride_Plugin\UpdateBridge;
 
-$current = (string)$oPlugin->getMeta()->getVersion();
-$enabled = mgdSeoYes($oPlugin->getConfig()->getValue('mgd_update_notices'));
-$result = (new GitHubReleaseChecker())->check($current, $enabled);
+// Updates Menue - MGD Update Client
+UpdateBridge::registerAutoload(dirname(__DIR__));
 
-mgdSeoHeader('Updates', 'Sichere Versionsprüfung über die öffentlichen GitHub-Releases des Projekts.');
-if (!$enabled) {
-    echo mgdSeoCard('Updateprüfung deaktiviert', '<p>Aktiviere „GitHub-Updatehinweise“ in den Plugin-Einstellungen, wenn der Shop neue stabile Releases prüfen darf.</p>', 'warn');
-} elseif (($result['ok'] ?? false) !== true) {
-    echo mgdSeoCard('GitHub momentan nicht erreichbar', '<p>Der Shop läuft unverändert weiter. Die Prüfung wird später erneut versucht.</p><p class="mgd-small">' . mgdSeoEsc($result['error'] ?? '') . '</p>', 'warn');
-} elseif (($result['update'] ?? false) === true) {
-    $button = '<p><strong>Installiert:</strong> ' . mgdSeoEsc($current) . '<br><strong>Verfügbar:</strong> ' . mgdSeoEsc($result['latest']) . '</p>';
-    if (!empty($result['download_url'])) { $button .= '<a class="mgd-btn" target="_blank" rel="noopener noreferrer" href="' . mgdSeoEsc($result['download_url']) . '">Release-ZIP herunterladen</a> '; }
-    $button .= '<a class="mgd-btn secondary" target="_blank" rel="noopener noreferrer" href="' . mgdSeoEsc($result['release_url']) . '">Release ansehen</a>';
-    echo mgdSeoCard('Update verfügbar', $button, 'ok');
-} else {
-    echo mgdSeoCard('Aktuell', '<p>Version <strong>' . mgdSeoEsc($current) . '</strong> ist auf dem neuesten stabilen Stand.</p>', 'ok');
+$pluginDir = dirname(__DIR__);
+$version = (string)$oPlugin->getMeta()->getVersion(); // Version aus Plugin, nie fest
+$domain = UpdateBridge::domainFromUrl((string)Shop::getURL());
+$shopVersion = defined('APPLICATION_VERSION') ? (string)APPLICATION_VERSION : '';
+
+// Rechte Check, im Zweifel kein Zugriff
+$canManage = static function (): bool {
+    try {
+        return (bool)Shop::Container()->getAdminAccount()->permission('PLUGIN_ADMIN_VIEW');
+    } catch (\Throwable) {
+        return false;
+    }
+};
+
+$page = UpdateBridge::page(
+    $pluginDir,
+    UpdateBridge::dataDir((string)PFAD_ROOT, defined('PFAD_COMPILEDIR') ? (string)PFAD_COMPILEDIR : 'templates_c/'), // Datenordner ausserhalb Web
+    $version,
+    $domain,
+    $shopVersion,
+    static fn (): bool => Form::validateToken(), // CSRF Check
+    $canManage,
+    Form::getTokenInput()
+);
+$out = $page->handle((string)($_SERVER['REQUEST_METHOD'] ?? 'GET'), $_POST);
+
+// geprueftes ZIP per POST ausliefern
+if (is_string($out['deliver']) && is_file($out['deliver'])) {
+    while (ob_get_level() > 0) {
+        ob_end_clean();
+    }
+    header('Content-Type: application/zip');
+    header('Content-Disposition: attachment; filename="' . rawurlencode(basename($out['deliver'])) . '"');
+    header('Content-Length: ' . (string)filesize($out['deliver']));
+    header('X-Content-Type-Options: nosniff');
+    readfile($out['deliver']);
+    exit;
 }
-echo '<div class="mgd-note"><strong>Sicherheitsprinzip:</strong> Version 1.1.0 installiert Updates nicht selbst. Eine neue ZIP wird bewusst über den JTL-Plugin-Manager eingespielt. Ein späterer Ein-Klick-Updater soll erst nach Prüfsumme, Backup und Rollback freigegeben werden.</div>';
+
+mgdSeoHeader('Updates', 'Update-Prüfung mit Signatur. Es wird nichts automatisch installiert.');
+echo mgdSeoCard('Update-Kanal', $out['html']);
+echo '<div class="mgd-note"><strong>Sicherheitsprinzip:</strong> Das Plugin lädt Updates nur herunter und prüft sie. Eingespielt wird die ZIP-Datei bewusst von dir in der JTL-Pluginverwaltung.</div>';
 mgdSeoFooter();

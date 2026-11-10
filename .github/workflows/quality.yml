@@ -23,5 +23,7 @@ jobs:
         run: find plugin -name '*.php' -print0 | xargs -0 -n1 php -l
       - name: Validate info.xml
         run: php -r '$x=simplexml_load_file("plugin/MGD_SEOoverride_Plugin/info.xml"); if ($x===false) { exit(1); } echo "info.xml OK\n";'
+      - name: Update-Client Smoke Test
+        run: php tests/update-smoke.php
       - name: Build install ZIP
-        run: bash scripts/build-release.sh 1.1.0
+        run: bash scripts/build-release.sh 1.1.1
