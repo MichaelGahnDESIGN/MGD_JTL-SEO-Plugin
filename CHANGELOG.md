@@ -2,6 +2,12 @@
 
 Alle relevanten Änderungen an MGD JTL SEO & PageSpeed werden hier dokumentiert.
 
+## [Unveröffentlicht]
+
+### Geändert
+
+* Release-ZIP enthält feste Dateirechte: Ordner 755, Dateien 644. Vorher konnten beim Entpacken per SSH Rechte 700 entstehen
+
 ## [1.1.2] - 2026-11-11
 
 ### Geändert
