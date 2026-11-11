@@ -48,7 +48,7 @@ if (is_string($out['deliver']) && is_file($out['deliver'])) {
     exit;
 }
 
-mgdSeoHeader('Updates', 'Update-Prüfung mit Signatur. Es wird nichts automatisch installiert.');
+mgdSeoHeader('Updates', 'Update-Prüfung mit Prüfsumme. Es wird nichts automatisch installiert.');
 echo mgdSeoCard('Update-Kanal', $out['html']);
 echo '<div class="mgd-note"><strong>Sicherheitsprinzip:</strong> Das Plugin lädt Updates nur herunter und prüft sie. Eingespielt wird die ZIP-Datei bewusst von dir in der JTL-Pluginverwaltung.</div>';
 mgdSeoFooter();

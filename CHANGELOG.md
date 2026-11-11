@@ -2,6 +2,18 @@
 
 Alle relevanten Änderungen an MGD JTL SEO & PageSpeed werden hier dokumentiert.
 
+## [1.1.2] - 2026-11-11
+
+### Geändert
+
+* README: Update-Bereich richtig beschrieben. Geprüft wird eine Prüfsumme (SHA-256), keine digitale Signatur
+* README: doppelten Abschnitt „Lizenz" entfernt
+* Wiki und Überschrift im Bereich **Updates**: „Signatur" durch „Prüfsumme" ersetzt
+
+### Hinweis
+
+Keine Änderung an der Funktion des Plugins. Die Angabe „signierte Update-Prüfung (Ed25519)" bei 1.1.1 bezieht sich auf die vorbereitete, noch nicht aktive Variante.
+
 ## [1.1.1] - 2026-11-10
 
 ### Hinzugefügt

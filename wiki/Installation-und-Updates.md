@@ -10,7 +10,7 @@ Für produktive Shops wird vor jedem Plugin-Update ein Backup von Datenbank und 
 
 Im Bereich **Updates** schaltest du die Prüfung selbst ein. Ohne Einschalten oder Klick auf "Jetzt nach Updates suchen" gibt es keine Abfrage im Netz.
 
-Die Antworten des Update-Servers sind digital signiert. Das Plugin lehnt alles ab, was nicht zur Signatur passt.
+Eine kleine Textdatei auf dem Update-Server nennt die neue Version und ihre Prüfsumme (SHA-256). Beim Download rechnet das Plugin die Prüfsumme nach. Passt sie nicht, wird das Paket abgelehnt.
 
 ## Installation eines Updates
 

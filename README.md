@@ -15,7 +15,7 @@
 
 **Technisches SEO und Core-Web-Vitals-Optimierung für JTL-Shop 5.**
 
-> Aktuelle Version: **1.1.1**  
+> Aktuelle Version: **1.1.2**  
 > Mindestversion: **JTL-Shop 5.7.0**  
 > Lizenz: **GPL-3.0-or-later**  
 > Hersteller: **Michael Gahn DESIGN**
@@ -50,7 +50,7 @@ Das Plugin enthält eigene, verständlich beschriftete Bereiche für:
 
 * **Dashboard** mit Status und sicheren Empfehlungen
 * **PageSpeed** mit Erklärungen zu LCP, Bildern, CSS, JavaScript und Caching
-* **Updates** mit signierter Update-Prüfung (MGD Update Client)
+* **Updates** mit Update-Prüfung per Prüfsumme (MGD Update Client)
 * **Impressum** mit Herstellerinformationen
 * **Einstellungen** für alle technischen Optimierungen
 
@@ -68,7 +68,7 @@ So geht es Schritt für Schritt:
 
 Das Plugin installiert **nie selbst**. Es tauscht keine Dateien aus und aktiviert nichts automatisch. Das macht nur JTL, wenn du die ZIP dort hochlädst.
 
-Was geprüft wird: digitale Signatur, Prüfsumme (SHA-256), Dateigröße und der Inhalt der ZIP. Ein Paket ohne gültige Signatur wird abgelehnt.
+Was geprüft wird: Prüfsumme (SHA-256), Dateigröße und der Inhalt der ZIP. Passt die Prüfsumme nicht, wird das Paket abgelehnt.
 
 Was gesendet wird: nur die IP-Adresse deines Servers (technisch nötig). Keine Besucher-, Kunden- oder Bestelldaten.
 
@@ -175,12 +175,6 @@ E-Mail: Anfrage@Michael-Gahn.de
 USt-IdNr.: DE288143343
 
 Vollständiges Impressum: https://Michael-Gahn.de/impressum/
-
-## Lizenz
-
-Copyright © 2026 Michael Gahn DESIGN.
-
-Dieses Projekt wird unter der **GNU General Public License v3.0 oder später** veröffentlicht. Siehe [`LICENSE`](LICENSE).
 
 ## Haftungshinweis
 
