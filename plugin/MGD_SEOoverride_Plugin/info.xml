@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jtlshopplugin>
-    <Name>MGD JTL SEO &amp; PageSpeed</Name>
+    <Name>MGD JTL SEO und PageSpeed</Name>
     <Description>Updatefeste Optimierungen für Core Web Vitals, PageSpeed und technisches SEO in JTL-Shop 5.</Description>
     <Author>Michael Gahn DESIGN</Author>
     <URL>https://Michael-Gahn.de</URL>
@@ -8,7 +8,7 @@
     <XMLVersion>100</XMLVersion>
     <MinShopVersion>5.7.0</MinShopVersion>
     <CreateDate>2026-09-13</CreateDate>
-    <Version>1.1.2</Version>
+    <Version>1.1.3</Version>
     <Install>
         <Adminmenu>
             <Customlink sort="1"><Name>Dashboard</Name><Filename>dashboard.php</Filename></Customlink>

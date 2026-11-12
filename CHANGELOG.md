@@ -2,10 +2,17 @@
 
 Alle relevanten Änderungen an MGD JTL SEO & PageSpeed werden hier dokumentiert.
 
-## [Unveröffentlicht]
+## [1.1.3] - 2026-11-12
+
+### Behoben
+
+* Plugin ließ sich in JTL-Shop 5.7 nicht installieren: JTL erlaubt im Plugin-Namen kein „&“ (Fehlercode 6, ungültiger Name). Der Name in der `info.xml` lautet jetzt **MGD JTL SEO und PageSpeed**. Die interne Plugin-ID bleibt gleich
+* Bereich **Updates**: Nach dem Download stand „geprüft (Signatur, …)“, obwohl im einfachen Modus nur die Prüfsumme geprüft wird. Die Meldung stimmt jetzt
+* Keine Hinweise „veraltet“ mehr unter PHP 8.5 (`curl_close`)
 
 ### Geändert
 
+* Update Client neu erzeugt (aktueller Stand aus MichaThemeV5-Pro)
 * Release-ZIP enthält feste Dateirechte: Ordner 755, Dateien 644. Vorher konnten beim Entpacken per SSH Rechte 700 entstehen
 
 ## [1.1.2] - 2026-11-11

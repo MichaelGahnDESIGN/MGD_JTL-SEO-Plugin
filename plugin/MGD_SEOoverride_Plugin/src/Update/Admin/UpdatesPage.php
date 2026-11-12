@@ -100,10 +100,18 @@ final class UpdatesPage
             }
             $this->state->save(['verified_file' => basename($file), 'verified_version' => (string) ($r->manifest['version'] ?? '')] + $this->state->load());
 
-            return ['<p class="alert alert-success">Paket heruntergeladen und geprüft (Signatur, SHA-256, Inhalt). Es wurde noch nichts installiert.</p>', null];
+            return ['<p class="alert alert-success">' . $this->e(self::verifiedText($r)) . '</p>', null];
         }
 
         return ['', null];
+    }
+
+    /** Erfolgsmeldung: nur nennen, was wirklich geprüft wurde (einfacher Modus = ohne Signatur) */
+    public static function verifiedText(UpdateResult $r): string
+    {
+        $what = ($r->extra['mode'] ?? null) === 'simple' ? 'SHA-256-Prüfsumme, Inhalt' : 'Signatur, SHA-256, Inhalt';
+
+        return 'Paket heruntergeladen und geprüft (' . $what . '). Es wurde noch nichts installiert.';
     }
 
     private function checkAndStore(): UpdateResult
