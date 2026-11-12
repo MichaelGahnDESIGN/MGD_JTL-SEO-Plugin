@@ -2,6 +2,12 @@
 
 Alle relevanten Änderungen an MGD JTL SEO & PageSpeed werden hier dokumentiert.
 
+## [1.1.4] - 2026-11-12
+
+### Behoben
+
+* Falsche Telefonnummer im Impressum korrigiert: im Backend-Bereich **Impressum**, in der README und im Wiki steht jetzt +49 (0) 151 59156639
+
 ## [1.1.3] - 2026-11-12
 
 ### Behoben

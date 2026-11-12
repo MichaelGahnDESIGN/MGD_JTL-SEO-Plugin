@@ -15,7 +15,7 @@
 
 **Technisches SEO und Core-Web-Vitals-Optimierung für JTL-Shop 5.**
 
-> Aktuelle Version: **1.1.3**  
+> Aktuelle Version: **1.1.4**  
 > Mindestversion: **JTL-Shop 5.7.0**  
 > Lizenz: **GPL-3.0-or-later**  
 > Hersteller: **Michael Gahn DESIGN**
@@ -170,7 +170,7 @@ Dr.-Theodor-Brugsch Str. 12
 08529 Plauen  
 Sachsen, Deutschland
 
-Telefon: +49 (0) 176 557 647 48  
+Telefon: +49 (0) 151 59156639  
 E-Mail: Anfrage@Michael-Gahn.de  
 USt-IdNr.: DE288143343
 
