@@ -11,7 +11,7 @@ Die Updateprüfung befindet sich getrennt unter `src/Update/` und wird nur im Ad
 ## Build
 
 ```bash
-bash scripts/build-release.sh 1.1.4
+bash scripts/build-release.sh 1.4.0
 ```
 
 Das Skript prüft die PHP-Syntax, erzeugt eine JTL-installierbare ZIP und eine SHA-256-Datei.

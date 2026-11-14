@@ -8,7 +8,7 @@
     <XMLVersion>100</XMLVersion>
     <MinShopVersion>5.7.0</MinShopVersion>
     <CreateDate>2026-09-13</CreateDate>
-    <Version>1.1.4</Version>
+    <Version>1.4.0</Version>
     <Install>
         <Adminmenu>
             <Customlink sort="1"><Name>Dashboard</Name><Filename>dashboard.php</Filename></Customlink>

@@ -2,6 +2,13 @@
 
 Alle relevanten Änderungen an MGD JTL SEO & PageSpeed werden hier dokumentiert.
 
+## [1.4.0] - 2026-11-14
+
+### Geändert
+
+* Gemeinsame Versionsnummer: Alle Themes und Plugins von Michael Gahn DESIGN tragen jetzt die Version 1.4.0. Am Plugin selbst ändert sich dadurch nichts
+* Update-Prüfung über theme.michael-gahn.de unverändert (Prüfsumme, kostenlose Variante)
+
 ## [1.1.4] - 2026-11-12
 
 ### Behoben

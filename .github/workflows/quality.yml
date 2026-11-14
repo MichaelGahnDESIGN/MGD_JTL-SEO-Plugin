@@ -26,4 +26,4 @@ jobs:
       - name: Update-Client Smoke Test
         run: php tests/update-smoke.php
       - name: Build install ZIP
-        run: bash scripts/build-release.sh 1.1.4
+        run: bash scripts/build-release.sh 1.4.0

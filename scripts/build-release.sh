@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-VERSION="${1:-1.1.4}"
+VERSION="${1:-1.4.0}"
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 OUT="$ROOT/release"
 PLUGIN="$ROOT/plugin/MGD_SEOoverride_Plugin"
