@@ -34,10 +34,12 @@ if [ "$BAD" != "0" ]; then
   exit 1
 fi
 
+# Prüfsumme nur mit Dateiname, kein lokaler Pfad drin
+ZIPNAME="$(basename "$ZIP")"
 if command -v shasum >/dev/null 2>&1; then
-  shasum -a 256 "$ZIP" > "$ZIP.sha256"
+  ( cd "$(dirname "$ZIP")"; shasum -a 256 "$ZIPNAME" > "$ZIPNAME.sha256" )
 else
-  sha256sum "$ZIP" > "$ZIP.sha256"
+  ( cd "$(dirname "$ZIP")"; sha256sum "$ZIPNAME" > "$ZIPNAME.sha256" )
 fi
 
 echo "Release erstellt: $ZIP"
