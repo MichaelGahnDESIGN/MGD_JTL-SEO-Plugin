@@ -8,9 +8,19 @@ Für produktive Shops wird vor jedem Plugin-Update ein Backup von Datenbank und 
 
 ## Updateprüfung
 
-Im Bereich **Updates** schaltest du die Prüfung selbst ein. Ohne Einschalten oder Klick auf "Jetzt nach Updates suchen" gibt es keine Abfrage im Netz.
+Im Bereich **Updates** schaltest du die Prüfung selbst ein. Ohne Einschalten oder Klick auf "Jetzt nach Updates suchen" sucht das Plugin nicht nach Updates.
 
 Eine kleine Textdatei auf dem Update-Server nennt die neue Version und ihre Prüfsumme (SHA-256). Beim Download rechnet das Plugin die Prüfsumme nach. Passt sie nicht, wird das Paket abgelehnt.
+
+## Installation melden
+
+Meldet sich höchstens einmal am Tag bei theme.michael-gahn.de (Plugin, Version, Shopsystem, Domain, zufällige ID). Abschaltbar in den Einstellungen.
+
+1. Öffne im Plugin den Punkt **Updates**.
+2. Dort steht der Haken **Installation bei Michael Gahn DESIGN melden**. Er ist ab Werk gesetzt.
+3. Zum Abschalten den Haken rausnehmen und auf **Speichern** klicken.
+
+Das Plugin läuft danach genauso weiter.
 
 ## Installation eines Updates
 

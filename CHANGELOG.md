@@ -2,6 +2,15 @@
 
 Alle relevanten Änderungen an MGD JTL SEO & PageSpeed werden hier dokumentiert.
 
+## [1.5.0] - 2026-11-18
+
+### Neu
+
+* Installation melden (Free-Lizenz): Meldet sich höchstens einmal am Tag bei theme.michael-gahn.de (Plugin, Version, Shopsystem, Domain, zufällige ID). Abschaltbar in den Einstellungen.
+* Die Meldung läuft beim Installieren, Aktivieren und Updaten und danach höchstens einmal am Tag im JTL-Backend, nie im Shop-Frontend. Sie läuft auch, wenn die Update-Prüfung aus ist
+* Neuer Schalter **Installation bei Michael Gahn DESIGN melden** im Bereich **Updates**, ab Werk an. Beim Abschalten wird der Eintrag auf der Plattform gelöscht
+* Das Plugin funktioniert immer voll weiter, auch ohne Plattform
+
 ## [1.4.0] - 2026-11-14
 
 ### Geändert

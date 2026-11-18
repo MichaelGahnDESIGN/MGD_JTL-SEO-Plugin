@@ -2,6 +2,10 @@
 
 namespace Plugin\MGD_SEOoverride_Plugin;
 
+use Plugin\MGD_SEOoverride_Plugin\Install\InstallClient;
+use Plugin\MGD_SEOoverride_Plugin\Install\Platform\Jtl;
+use Plugin\MGD_SEOoverride_Plugin\Install\Settings;
+use Plugin\MGD_SEOoverride_Plugin\Update\Admin\InstallReporting;
 use Plugin\MGD_SEOoverride_Plugin\Update\Admin\UpdatesPage;
 use Plugin\MGD_SEOoverride_Plugin\Update\Factory;
 
@@ -14,25 +18,64 @@ final class UpdateBridge
     public const PLUGIN_NAME = 'MGD JTL SEO & PageSpeed';
     // Prüfsummen-Datei auf All-Inkl, einfacher Modus ohne Schlüssel
     public const SIMPLE_URL = 'https://theme.michael-gahn.de/plugin-updates/mgd-jtl-seo.json';
-    private const NAMESPACE_PREFIX = 'Plugin\\MGD_SEOoverride_Plugin\\Update\\';
+    // Namensraum > Unterordner, beides generiert (Update + Install Client)
+    private const NAMESPACES = [
+        'Plugin\\MGD_SEOoverride_Plugin\\Update\\'  => 'src/Update/',
+        'Plugin\\MGD_SEOoverride_Plugin\\Install\\' => 'src/Install/',
+    ];
 
-    // Autoload für src/Update (Klassen sind generiert, kein JTL-Autoloader noetig)
+    // Autoload für src/Update + src/Install (Klassen sind generiert, kein JTL-Autoloader noetig)
     public static function registerAutoload(string $pluginDir): void
     {
-        $base = rtrim($pluginDir, '/\\') . '/src/Update/';
-        spl_autoload_register(static function (string $class) use ($base): void {
-            if (!str_starts_with($class, self::NAMESPACE_PREFIX)) {
+        static $done = [];
+        $root = rtrim($pluginDir, '/\\') . '/';
+        if (isset($done[$root])) {
+            return;
+        }
+        $done[$root] = true;
+        spl_autoload_register(static function (string $class) use ($root): void {
+            foreach (self::NAMESPACES as $prefix => $dir) {
+                if (!str_starts_with($class, $prefix)) {
+                    continue;
+                }
+                $rel = substr($class, strlen($prefix));
+                if (!preg_match('/^[A-Za-z0-9\\\\]+$/D', $rel)) {
+                    return;
+                }
+                $file = $root . $dir . str_replace('\\', '/', $rel) . '.php';
+                if (is_file($file)) {
+                    require_once $file;
+                }
+
                 return;
-            }
-            $rel = substr($class, strlen(self::NAMESPACE_PREFIX));
-            if (!preg_match('/^[A-Za-z0-9\\\\]+$/D', $rel)) {
-                return;
-            }
-            $file = $base . str_replace('\\', '/', $rel) . '.php';
-            if (is_file($file)) {
-                require_once $file;
             }
         });
+    }
+
+    // Free-Lizenz Anmeldung, null = ungueltig > dann einfach nix melden
+    public static function installClient(string $dataDir, string $version): ?InstallClient
+    {
+        try {
+            return Jtl::client($dataDir, self::PRODUCT, $version);
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+
+    // Schalter fuer die Update-Seite
+    public static function installReporting(?InstallClient $ic): ?InstallReporting
+    {
+        if ($ic === null) {
+            return null;
+        }
+
+        return new InstallReporting(
+            static fn () => $ic->ping(),
+            static fn (): bool => $ic->isEnabled(),
+            static fn (bool $an) => $ic->setEnabled($an),
+            static fn (): string => $ic->status(),
+            Settings::HINT,
+        );
     }
 
     // Datenordner ausserhalb Web: templates_c/ im Shop, per .htaccess zusaetzlich gesperrt
@@ -73,6 +116,7 @@ final class UpdateBridge
         callable $csrfValid,
         callable $canManage,
         string $csrfField,
+        ?InstallReporting $install = null,
     ): UpdatesPage {
         // Free: kein LicenseProvider, Factory nimmt NullLicenseProvider
         return Factory::page(
@@ -90,6 +134,7 @@ final class UpdateBridge
             null,
             ['info.xml'],
             self::SIMPLE_URL,
+            $install,
         );
     }
 }

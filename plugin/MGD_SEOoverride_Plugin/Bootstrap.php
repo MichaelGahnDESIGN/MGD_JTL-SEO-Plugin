@@ -14,6 +14,11 @@ final class Bootstrap extends Bootstrapper
         parent::boot($dispatcher);
 
         if (!Shop::isFrontend()) {
+            // Free-Lizenz: max 1x am Tag, nur im Admin
+            if (Shop::isAdmin()) {
+                $this->reportInstall(false);
+            }
+
             return;
         }
 
@@ -37,5 +42,40 @@ final class Bootstrap extends Bootstrapper
         ]);
 
         $dispatcher->listen('shop.hook.' . \HOOK_SMARTY_OUTPUTFILTER, [$optimizer, 'optimize'], 50);
+    }
+
+    public function installed()
+    {
+        parent::installed();
+        $this->reportInstall(true);
+    }
+
+    public function enabled()
+    {
+        parent::enabled();
+        $this->reportInstall(true);
+    }
+
+    public function updated($oldVersion, $newVersion)
+    {
+        parent::updated($oldVersion, $newVersion);
+        $this->reportInstall(true, (string)$newVersion);
+    }
+
+    // Anmeldung bei theme.michael-gahn.de - darf NIE was kaputt machen
+    private function reportInstall(bool $force, ?string $version = null): void
+    {
+        try {
+            require_once __DIR__ . '/src/UpdateBridge.php';
+            UpdateBridge::registerAutoload(__DIR__);
+            $version ??= (string)$this->getPlugin()->getMeta()->getVersion();
+            $dataDir = UpdateBridge::dataDir(
+                (string)\PFAD_ROOT,
+                \defined('PFAD_COMPILEDIR') ? (string)\PFAD_COMPILEDIR : 'templates_c/'
+            );
+            UpdateBridge::installClient($dataDir, $version)?->ping($force);
+        } catch (\Throwable) {
+            // egal, Plugin laeuft weiter
+        }
     }
 }

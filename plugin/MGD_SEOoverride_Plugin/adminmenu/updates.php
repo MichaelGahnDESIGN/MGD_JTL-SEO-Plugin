@@ -23,15 +23,20 @@ $canManage = static function (): bool {
     }
 };
 
+$dataDir = UpdateBridge::dataDir((string)PFAD_ROOT, defined('PFAD_COMPILEDIR') ? (string)PFAD_COMPILEDIR : 'templates_c/'); // Datenordner ausserhalb Web
+// Free-Lizenz Schalter, null wenn Client nicht geht > Seite laeuft trotzdem
+$install = UpdateBridge::installReporting(UpdateBridge::installClient($dataDir, $version));
+
 $page = UpdateBridge::page(
     $pluginDir,
-    UpdateBridge::dataDir((string)PFAD_ROOT, defined('PFAD_COMPILEDIR') ? (string)PFAD_COMPILEDIR : 'templates_c/'), // Datenordner ausserhalb Web
+    $dataDir,
     $version,
     $domain,
     $shopVersion,
     static fn (): bool => Form::validateToken(), // CSRF Check
     $canManage,
-    Form::getTokenInput()
+    Form::getTokenInput(),
+    $install
 );
 $out = $page->handle((string)($_SERVER['REQUEST_METHOD'] ?? 'GET'), $_POST);
 

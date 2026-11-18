@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jtlshopplugin>
     <Name>MGD JTL SEO und PageSpeed</Name>
-    <Description>Updatefeste Optimierungen für Core Web Vitals, PageSpeed und technisches SEO in JTL-Shop 5.</Description>
+    <Description>Updatefeste Optimierungen für Core Web Vitals, PageSpeed und technisches SEO in JTL-Shop 5. Meldet sich höchstens einmal am Tag bei theme.michael-gahn.de (Plugin, Version, Shopsystem, Domain, zufällige ID). Abschaltbar in den Einstellungen.</Description>
     <Author>Michael Gahn DESIGN</Author>
     <URL>https://Michael-Gahn.de</URL>
     <PluginID>MGD_SEOoverride_Plugin</PluginID>
     <XMLVersion>100</XMLVersion>
     <MinShopVersion>5.7.0</MinShopVersion>
     <CreateDate>2026-09-13</CreateDate>
-    <Version>1.4.0</Version>
+    <Version>1.5.0</Version>
     <Install>
         <Adminmenu>
             <Customlink sort="1"><Name>Dashboard</Name><Filename>dashboard.php</Filename></Customlink>
