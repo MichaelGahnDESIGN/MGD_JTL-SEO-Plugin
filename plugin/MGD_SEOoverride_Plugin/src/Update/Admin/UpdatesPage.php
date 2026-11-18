@@ -35,6 +35,7 @@ final class UpdatesPage
         private readonly string $pluginName,
         private readonly string $installedVersion,
         ?callable $clock = null,
+        private readonly ?InstallReporting $install = null,
     ) {
         $this->csrfValid = $csrfValid;
         $this->canManage = $canManage;
@@ -59,6 +60,13 @@ final class UpdatesPage
             }
             [$notice, $deliver] = $this->runAction($action, $post);
         }
+        if ($this->install !== null) {
+            // Aktiv-Meldung unabhängig von der Update-Prüfung (Michael 14.11.2026)
+            try {
+                ($this->install->ping)();
+            } catch (\Throwable) {
+            }
+        }
         $st = $this->state->load();
         $enabled = ($st['enabled'] ?? false) === true;
         $last = is_array($st['last_result'] ?? null) ? $st['last_result'] : null;
@@ -76,6 +84,11 @@ final class UpdatesPage
         if ($action === 'save_settings') {
             $st = $this->state->load();
             $this->state->save(['enabled' => ($post['checks_enabled'] ?? '') === '1'] + $st);
+
+            return ['<p class="alert alert-success">Einstellung gespeichert.</p>', null];
+        }
+        if ($action === 'save_install' && $this->install !== null) {
+            ($this->install->setEnabled)(($post['install_report'] ?? '') === '1');
 
             return ['<p class="alert alert-success">Einstellung gespeichert.</p>', null];
         }
@@ -136,6 +149,13 @@ final class UpdatesPage
             . '<button type="submit" class="btn btn-primary">Speichern</button></form><hr>';
         $h .= '<form method="post">' . $this->csrfField . '<input type="hidden" name="mgd_update_action" value="check_now">'
             . '<button type="submit" class="btn btn-default">Jetzt nach Updates suchen</button></form>';
+        if ($this->install !== null) {
+            $h .= '<hr><form method="post">' . $this->csrfField . '<input type="hidden" name="mgd_update_action" value="save_install">'
+                . '<label><input type="checkbox" name="install_report" value="1"' . (($this->install->isEnabled)() ? ' checked' : '') . '> Installation bei Michael Gahn DESIGN melden</label>'
+                . '<p class="small text-muted">' . $this->e($this->install->hint) . '</p>'
+                . '<p class="small">' . $this->e(($this->install->status)()) . '</p>'
+                . '<button type="submit" class="btn btn-primary">Speichern</button></form>';
+        }
         if ($last !== null) {
             $h .= '<p class="mt-3">Letztes Ergebnis: ' . $this->e((string) ($last['message'] ?? '')) . '</p>';
             if (in_array($last['status'] ?? '', ['update_available', 'security_update_only'], true)) {
