@@ -15,7 +15,7 @@
 
 **Technisches SEO und Core-Web-Vitals-Optimierung für JTL-Shop 5.**
 
-> Aktuelle Version: **1.5.0**  
+> Aktuelle Version: **1.6.0**  
 > Mindestversion: **JTL-Shop 5.7.0**  
 > Lizenz: **GPL-3.0-or-later**  
 > Hersteller: **Michael Gahn DESIGN**
@@ -50,17 +50,18 @@ Das Plugin enthält eigene, verständlich beschriftete Bereiche für:
 
 * **Dashboard** mit Status und sicheren Empfehlungen
 * **PageSpeed** mit Erklärungen zu LCP, Bildern, CSS, JavaScript und Caching
-* **Updates** mit Update-Prüfung per Prüfsumme (MGD Update Client)
+* **Übersicht** mit Info, Updates (Prüfsumme), Weitere Plugins und Installation melden (Baukasten)
+* **Weitere Plugins**: Liste anderer MGD-Plugins für JTL-Shop (nur Ansehen, nichts wird installiert)
 * **Impressum** mit Herstellerinformationen
 * **Einstellungen** für alle technischen Optimierungen
 
 ### Updates
 
-Im Backend gibt es den Punkt **Updates**. Er sagt dir, ob es eine neue Version gibt.
+Im Backend gibt es den Punkt **Übersicht**. Er sagt dir, ob es eine neue Version gibt.
 
 So geht es Schritt für Schritt:
 
-1. Öffne im JTL-Backend das Plugin und klicke auf **Updates**.
+1. Öffne im JTL-Backend das Plugin und klicke auf **Übersicht**.
 2. Setze den Haken **Update-Prüfung einschalten** und klicke auf **Speichern**. Vorher sucht das Plugin nie nach Updates.
 3. Klicke auf **Jetzt nach Updates suchen**. Auch dieser Klick löst genau eine Abfrage aus.
 4. Gibt es ein Update, setze den Haken zur Bestätigung und klicke auf **Paket herunterladen und prüfen**.
@@ -90,7 +91,7 @@ So funktioniert es:
 1. Beim Installieren, Aktivieren und Updaten meldet sich das Plugin einmal bei theme.michael-gahn.de.
 2. Danach meldet es sich höchstens einmal am Tag, und zwar nur, wenn jemand im JTL-Backend ist. Besucher im Shop merken davon nichts.
 3. Gesendet werden nur: Plugin-Name, Version, Shopsystem, die Domain deines Shops und eine zufällige Installations-ID.
-4. Abschalten: Öffne im Plugin den Punkt **Updates**. Nimm den Haken bei **Installation bei Michael Gahn DESIGN melden** raus und klicke auf **Speichern**. Dann wird der Eintrag auf theme.michael-gahn.de gelöscht, und es wird nichts mehr gesendet.
+4. Abschalten: Öffne im Plugin den Punkt **Übersicht**. Nimm den Haken bei **Installation bei Michael Gahn DESIGN melden** raus und klicke auf **Speichern**. Dann wird der Eintrag auf theme.michael-gahn.de gelöscht, und es wird nichts mehr gesendet.
 
 Das Plugin funktioniert immer voll weiter, auch wenn du die Meldung abschaltest oder die Plattform nicht erreichbar ist.
 
@@ -134,7 +135,7 @@ Auch jQuery oder andere zentrale JTL-Skripte werden nicht pauschal auf `defer` g
 
 ## Datenschutz
 
-Die Performance-Optimierungen laufen lokal im Shop. Die Installations-Meldung (siehe **Installation melden**) sendet höchstens einmal am Tag Plugin-Name, Version, Shopsystem, Domain und eine zufällige ID an theme.michael-gahn.de. Sie ist ab Werk an und im Bereich **Updates** abschaltbar. Nach Updates sucht das Plugin nur, wenn du die Update-Prüfung einschaltest oder auf "Jetzt nach Updates suchen" klickst. Ein Download-Paket kommt von GitHub. Dabei sehen die Server technisch die Server-IP, den Zeitpunkt und den User-Agent des Requests. Das Plugin überträgt keine Kundendaten, Bestellungen, Formulareingaben oder Zugangsdaten.
+Die Performance-Optimierungen laufen lokal im Shop. Die Installations-Meldung (siehe **Installation melden**) sendet höchstens einmal am Tag Plugin-Name, Version, Shopsystem, Domain und eine zufällige ID an theme.michael-gahn.de. Sie ist ab Werk an und im Tab **Übersicht** abschaltbar. Nach Updates sucht das Plugin nur, wenn du die Update-Prüfung einschaltest oder auf "Jetzt nach Updates suchen" klickst. Ein Download-Paket kommt von GitHub. Dabei sehen die Server technisch die Server-IP, den Zeitpunkt und den User-Agent des Requests. Das Plugin überträgt keine Kundendaten, Bestellungen, Formulareingaben oder Zugangsdaten.
 
 ## Projektstruktur
 

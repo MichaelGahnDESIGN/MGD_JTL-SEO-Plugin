@@ -1,0 +1,63 @@
+/* MGD Kit JTL-Backend - lokal, keine fremden Schriften, hell wie das JTL-Backend  */
+.mgd-kit-jtl {
+  --mgd-bg: #f5f7f9;
+  --mgd-card: #ffffff;
+  --mgd-text: #1f2d3d;
+  --mgd-muted: #4a5a6a;
+  --mgd-line: #d1d9e0;
+  --mgd-accent: #0a58ca;
+  --mgd-focus: #0a58ca;
+  box-sizing: border-box;
+  max-width: 1100px;
+  padding: 16px;
+  background: var(--mgd-bg);
+  color: var(--mgd-text);
+  font-size: 15px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.mgd-kit-jtl *, .mgd-kit-jtl *::before, .mgd-kit-jtl *::after { box-sizing: border-box; }
+.mgd-kit-jtl h1 { font-size: 24px; line-height: 1.3; margin: 0 0 16px; }
+.mgd-kit-jtl h2 { font-size: 18px; margin: 0 0 8px; }
+.mgd-kit-jtl h3 { font-size: 16px; margin: 0 0 8px; }
+.mgd-kit-jtl .text-muted, .mgd-kit-jtl .small, .mgd-kit-jtl .mgd-kit-version { color: var(--mgd-muted) !important; }
+/* Karten pro Bereich */
+.mgd-kit-jtl .mgd-kit-section {
+  background: var(--mgd-card);
+  border: 1px solid var(--mgd-line);
+  border-radius: 8px;
+  padding: 16px;
+  margin: 0 0 16px;
+}
+.mgd-kit-jtl a { color: var(--mgd-accent); text-decoration: underline; }
+/*Buttons + Felder min 44px */
+.mgd-kit-jtl .btn, .mgd-kit-jtl button, .mgd-kit-jtl .form-control {
+  min-height: 44px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+.mgd-kit-jtl .btn, .mgd-kit-jtl button { min-width: 44px; padding: 8px 16px; margin: 4px 8px 4px 0; display: inline-flex; align-items: center; }
+.mgd-kit-jtl a.btn { text-decoration: none; }
+.mgd-kit-jtl .form-control { max-width: 480px; }
+.mgd-kit-jtl input[type="checkbox"] { width: 24px; height: 24px; margin: 0 8px 0 0; }
+.mgd-kit-jtl label { display: inline-flex; align-items: center; min-height: 44px; }
+/* Fokus immer sichtbar */
+.mgd-kit-jtl a:focus-visible, .mgd-kit-jtl .btn:focus-visible, .mgd-kit-jtl button:focus-visible, .mgd-kit-jtl input:focus-visible {
+  outline: 3px solid var(--mgd-focus);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+/* Empfehlungs-Karten, 390px ohne Querscrollen */
+.mgd-kit-jtl .mgd-kit-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
+.mgd-kit-jtl .mgd-kit-card { min-width: 0; padding: 12px; background: var(--mgd-card); border: 1px solid var(--mgd-line); border-radius: 8px; }
+@media (max-width: 600px) {
+  .mgd-kit-jtl, .mgd-kit-jtl .mgd-kit-section { padding: 12px; }
+}
+/* Kontrast-Modus Windows */
+@media (forced-colors: active) {
+  .mgd-kit-jtl .mgd-kit-section, .mgd-kit-jtl .mgd-kit-card, .mgd-kit-jtl .btn { border: 1px solid CanvasText; }
+  .mgd-kit-jtl a:focus-visible, .mgd-kit-jtl .btn:focus-visible, .mgd-kit-jtl button:focus-visible, .mgd-kit-jtl input:focus-visible { outline-color: Highlight; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mgd-kit-jtl * { transition: none !important; animation: none !important; }
+}

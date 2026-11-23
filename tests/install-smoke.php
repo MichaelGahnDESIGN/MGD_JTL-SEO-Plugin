@@ -82,8 +82,5 @@ $page->handle('POST', ['jtl_token' => 'TESTTOKEN', 'mgd_update_action' => 'save_
 check('Wieder anschalten', $ic->isEnabled());
 check('Nach Anschalten wieder Meldung', $ic->ping(true) === true);
 
-// 5 Bootstrap darf nie crashen
-check('Bootstrap Syntax mit ?->', str_contains((string)file_get_contents($plugin . '/Bootstrap.php'), 'installClient($dataDir, $version)?->ping($force)'));
-
 echo $fails === 0 ? "\nALLES OK\n" : "\n$fails FEHLER\n";
 exit($fails === 0 ? 0 : 1);

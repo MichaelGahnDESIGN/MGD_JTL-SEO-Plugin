@@ -5,6 +5,7 @@ namespace Plugin\MGD_SEOoverride_Plugin;
 use JTL\Events\Dispatcher;
 use JTL\Plugin\Bootstrapper;
 use JTL\Shop;
+use Plugin\MGD_SEOoverride_Plugin\Kit\Platform\Jtl\Setup;
 use Plugin\MGD_SEOoverride_Plugin\Src\FrontendOptimizer;
 
 final class Bootstrap extends Bootstrapper
@@ -14,8 +15,8 @@ final class Bootstrap extends Bootstrapper
         parent::boot($dispatcher);
 
         if (!Shop::isFrontend()) {
-            // Free-Lizenz: max 1x am Tag, nur im Admin
-            if (Shop::isAdmin()) {
+            // Installation melden: max 1x am Tag, nur im Admin
+            if (Shop::isAdmin() && \PHP_SAPI !== 'cli') {
                 $this->reportInstall(false);
             }
 
@@ -59,21 +60,63 @@ final class Bootstrap extends Bootstrapper
     public function updated($oldVersion, $newVersion)
     {
         parent::updated($oldVersion, $newVersion);
-        $this->reportInstall(true, (string)$newVersion);
+        $this->reportInstall(true);
+    }
+
+    // Abmelden beim Deinstallieren - Baukasten Kit
+    public function uninstalled(bool $deleteData = true)
+    {
+        try {
+            $this->kit()?->uninstall($deleteData);
+        } catch (\Throwable) {
+            // egal, Deinstallation laeuft weiter
+        }
+        parent::uninstalled($deleteData);
+    }
+
+    // Baukasten (Kit) - null wenn was fehlt, dann passiert einfach nix
+    private function kit(): ?object
+    {
+        try {
+            $this->takeOverOldData();
+
+            return Setup::forShop($this->getPlugin());
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+
+    // alter Datenordner mgd-seo-update > neuer Kit Ordner (Bindestrich geht im Kit nicht), nur einmal
+    private function takeOverOldData(): void
+    {
+        if (!\defined('PFAD_ROOT') || !\defined('PFAD_COMPILEDIR')) {
+            return;
+        }
+        $base = \rtrim((string)\PFAD_ROOT . (string)\PFAD_COMPILEDIR, '/\\');
+        $old = $base . '/mgd-seo-update';
+        $new = $base . '/mgd_seooverride_plugin_update';
+        if (!\is_dir($old) || \is_link($old) || \is_file($new . '/install.json')) {
+            return;
+        }
+        if (!\is_dir($new) && !@\mkdir($new, 0700, true) && !\is_dir($new)) {
+            return;
+        }
+        foreach (['install.json', 'state.json'] as $f) {
+            $src = $old . '/' . $f;
+            if (\is_file($src) && !\is_link($src) && \filesize($src) <= 65536 && !\is_file($new . '/' . $f)) {
+                $data = (string)\file_get_contents($src);
+                if (\is_array(\json_decode($data, true)) && \file_put_contents($new . '/' . $f, $data, LOCK_EX) !== false) {
+                    @\chmod($new . '/' . $f, 0600);
+                }
+            }
+        }
     }
 
     // Anmeldung bei theme.michael-gahn.de - darf NIE was kaputt machen
-    private function reportInstall(bool $force, ?string $version = null): void
+    private function reportInstall(bool $force): void
     {
         try {
-            require_once __DIR__ . '/src/UpdateBridge.php';
-            UpdateBridge::registerAutoload(__DIR__);
-            $version ??= (string)$this->getPlugin()->getMeta()->getVersion();
-            $dataDir = UpdateBridge::dataDir(
-                (string)\PFAD_ROOT,
-                \defined('PFAD_COMPILEDIR') ? (string)\PFAD_COMPILEDIR : 'templates_c/'
-            );
-            UpdateBridge::installClient($dataDir, $version)?->ping($force);
+            $this->kit()?->ping($force);
         } catch (\Throwable) {
             // egal, Plugin laeuft weiter
         }

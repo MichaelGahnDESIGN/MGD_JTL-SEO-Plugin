@@ -8,14 +8,15 @@
     <XMLVersion>100</XMLVersion>
     <MinShopVersion>5.7.0</MinShopVersion>
     <CreateDate>2026-09-13</CreateDate>
-    <Version>1.5.0</Version>
+    <Version>1.6.0</Version>
     <Install>
         <Adminmenu>
             <Customlink sort="1"><Name>Dashboard</Name><Filename>dashboard.php</Filename></Customlink>
             <Customlink sort="2"><Name>PageSpeed</Name><Filename>pagespeed.php</Filename></Customlink>
-            <Customlink sort="3"><Name>Updates</Name><Filename>updates.php</Filename></Customlink>
-            <Customlink sort="4"><Name>Impressum</Name><Filename>impressum.php</Filename></Customlink>
-            <Settingslink sort="5">
+            <Customlink sort="3"><Name>Übersicht</Name><Filename>uebersicht.php</Filename></Customlink>
+            <Customlink sort="4"><Name>Weitere Plugins</Name><Filename>weitere-plugins.php</Filename></Customlink>
+            <Customlink sort="5"><Name>Impressum</Name><Filename>impressum.php</Filename></Customlink>
+            <Settingslink sort="6">
                 <Name>Einstellungen</Name>
                 <Setting type="selectbox" initialValue="Y" sort="10" conf="Y">
                     <Name>Plugin aktiv</Name><Description>Aktiviert oder deaktiviert alle Frontend-Optimierungen des Plugins.</Description><ValueName>mgd_enabled</ValueName>

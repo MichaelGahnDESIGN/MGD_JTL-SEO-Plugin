@@ -2,6 +2,19 @@
 
 Alle relevanten Änderungen an MGD JTL SEO & PageSpeed werden hier dokumentiert.
 
+## [1.6.0] - 2026-11-24
+
+### Neu
+
+* Brückenversion mit dem gemeinsamen Plugin-Baukasten: Der Tab **Updates** heißt jetzt **Übersicht** und zeigt Info, Updates, Weitere Plugins und Installation melden auf einer Seite
+* Neuer Tab **Weitere Plugins** mit Karten anderer MGD-Plugins für JTL-Shop. Es wird nichts installiert, nur angesehen
+* Beim Deinstallieren meldet sich das Plugin bei theme.michael-gahn.de ab
+* Die bisherige Installations-ID und der Schalter bleiben erhalten (Daten werden einmal in den neuen Ordner übernommen)
+
+### Geändert
+
+* Der alte Update-Code liegt noch im Plugin, wird aber nicht mehr angemeldet. Er wird in der Endversion entfernt
+
 ## [1.5.0] - 2026-11-18
 
 ### Neu
