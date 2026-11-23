@@ -95,7 +95,7 @@ final class Bootstrap extends Bootstrapper
         $base = \rtrim((string)\PFAD_ROOT . (string)\PFAD_COMPILEDIR, '/\\');
         $old = $base . '/mgd-seo-update';
         $new = $base . '/mgd_seooverride_plugin_update';
-        if (!\is_dir($old) || \is_link($old) || \is_file($new . '/install.json')) {
+        if (!\is_dir($old) || \is_link($old)) {
             return;
         }
         if (!\is_dir($new) && !@\mkdir($new, 0700, true) && !\is_dir($new)) {
@@ -108,6 +108,10 @@ final class Bootstrap extends Bootstrapper
                 if (\is_array(\json_decode($data, true)) && \file_put_contents($new . '/' . $f, $data, LOCK_EX) !== false) {
                     @\chmod($new . '/' . $f, 0600);
                 }
+            }
+            // alt stilllegen, sonst kommt die ID nach Daten loeschen + Neuinstall wieder
+            if (\is_file($src) && \is_file($new . '/' . $f)) {
+                @\rename($src, $src . '.migrated');
             }
         }
     }

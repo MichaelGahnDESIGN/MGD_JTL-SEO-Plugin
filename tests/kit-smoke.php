@@ -40,6 +40,7 @@ check('Alter Updates Tab nicht mehr angemeldet', !str_contains($xml, 'updates.ph
 check('Tab Dateien da', is_file($plugin . '/adminmenu/uebersicht.php') && is_file($plugin . '/adminmenu/weitere-plugins.php'));
 check('Bootstrap meldet per Kit', str_contains($boot, 'kit()?->ping($force)'));
 check('Bootstrap meldet beim Deinstallieren ab', str_contains($boot, '?->uninstall($deleteData)') && str_contains($boot, 'function uninstalled('));
+check('Alte Daten werden stillgelegt (.migrated)', str_contains($boot, '.migrated'));
 check('Bootstrap nutzt alten Update Code nicht mehr', !str_contains($boot, 'UpdateBridge'));
 check('root-keys.json da', is_file($plugin . '/update/root-keys.json'));
 
