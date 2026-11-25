@@ -147,7 +147,7 @@ final class JtlKit
         $updates = $u === null ? null : static fn (string $m, array $p): array => $u($g, $m, $p);
 
         return new Dashboard($this->pluginName, $this->version, $this->product, $this->guard, $updates, $this->noticeReader(),
-            $this->recommendations(), $this->license(), $this->installClient(), $this->media);
+            $this->recommendations(), $this->license(), $this->installClient(), $this->media, ColorPicker::file($this->dataDir));
     }
 
     /**

@@ -29,9 +29,14 @@ final class Setup
             $compiled = defined('PFAD_ROOT') && defined('PFAD_COMPILEDIR') ? constant('PFAD_ROOT') . constant('PFAD_COMPILEDIR') : '';
             $dir = $compiled !== '' ? self::dataDir($compiled, $folder) : null;
             if ($dir !== null && preg_match(self::PLUGIN_ID_RE, $pluginId) === 1) {
-                self::adoptLegacy($compiled, $pluginId, $dir);
+                // alte Ordner unter templates_c: Standard mgd-update-client/<PluginID> + eigene (legacyFolder / legacyFolders, z.B. mgd-seo-update)
+                foreach (self::legacyCandidates($pluginId, $o) as $rel) {
+                    self::adoptLegacy($compiled, $pluginId, $dir, $rel);
+                }
             }
-            $version = self::version($plugin, $base);
+            // updated($old, $new): JTL hat noch die alte Version drin > neue mitgeben (Befund slider)
+            $given = is_string($o['version'] ?? null) && preg_match('/^\d{1,5}\.\d{1,5}\.\d{1,5}$/D', $o['version']) === 1 ? $o['version'] : '';
+            $version = $given !== '' ? $given : self::version($plugin, $base);
             if (preg_match(self::PLUGIN_ID_RE, $pluginId) !== 1 || $dir === null || $version === '') {
                 return null;
             }
@@ -73,15 +78,54 @@ final class Setup
     // danach alt > *.migrated, sonst holt ein Neuinstallieren nach "Daten löschen" die abgemeldete ID zurück (Befund Pilot)
     public const LEGACY_FILES = ['install.json', 'state.json'];
 
+    /** @return list<string> */
+    public static function legacyCandidates(string $pluginId, array $o): array
+    {
+        $out = ['mgd-update-client/' . $pluginId];
+        $more = $o['legacyFolders'] ?? [];
+        foreach (array_merge(is_array($more) ? $more : [], is_string($o['legacyFolder'] ?? null) ? [$o['legacyFolder']] : []) as $f) {
+            if (is_string($f) && preg_match(self::LEGACY_FOLDER_RE, $f) === 1 && !in_array($f, $out, true)) {
+                $out[] = $f;
+            }
+            if (count($out) >= 6) {
+                break;
+            }
+        }
+
+        return $out;
+    }
+
+    // nur echter Admin-Bereich (nicht Shop-Besucher, nicht Wawi-Abgleich dbeS, nicht CLI) > da darf gemeldet werden
+    public static function isBackend(?string $script = null, ?string $adminDir = null): bool
+    {
+        if (PHP_SAPI === 'cli' && $script === null) {
+            return false;
+        }
+        $script = str_replace('\\', '/', (string) ($script ?? ($_SERVER['SCRIPT_NAME'] ?? '')));
+        $admin = trim((string) ($adminDir ?? (defined('PFAD_ADMIN') ? constant('PFAD_ADMIN') : 'admin/')), '/');
+        if ($admin === '' || str_contains($script, '/dbeS/')) {
+            return false;
+        }
+
+        return str_contains($script, '/' . $admin . '/');
+    }
+
+    public const LEGACY_FOLDER_RE = '#^[A-Za-z0-9_-]{2,80}(?:/[A-Za-z0-9_-]{2,80})?$#D';
+
     /** @return list<string> übernommene Dateien */
-    public static function adoptLegacy(string $compiledBase, string $pluginId, string $newDir): array
+    public static function adoptLegacy(string $compiledBase, string $pluginId, string $newDir, ?string $legacyFolder = null): array
     {
         $done = [];
         try {
             if (preg_match(self::PLUGIN_ID_RE, $pluginId) !== 1) {
                 return [];
             }
-            $old = rtrim($compiledBase, '/\\') . '/mgd-update-client/' . $pluginId;
+            // Standard alter Update-Client, sonst eigener alter Ordnername (Bindestrich ok, max 2 Ebenen, kein ..)
+            $rel = $legacyFolder ?? 'mgd-update-client/' . $pluginId;
+            if (preg_match(self::LEGACY_FOLDER_RE, $rel) !== 1) {
+                return [];
+            }
+            $old = rtrim($compiledBase, '/\\') . '/' . $rel;
             if (!is_dir($old) || is_link($old) || realpath($old) === realpath($newDir)) {
                 return [];
             }

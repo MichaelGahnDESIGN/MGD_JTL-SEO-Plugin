@@ -30,4 +30,4 @@ jobs:
       - name: Baukasten Smoke Test
         run: php tests/kit-smoke.php
       - name: Build install ZIP
-        run: bash scripts/build-release.sh 1.6.0
+        run: bash scripts/build-release.sh 2.1.1

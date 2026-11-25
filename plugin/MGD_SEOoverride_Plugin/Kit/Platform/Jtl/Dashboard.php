@@ -30,6 +30,8 @@ final class Dashboard
         private readonly ?LicenseClient $license = null,
         private readonly ?InstallClient $install = null,
         private readonly ?MediaCache $media = null,
+        // Farbwähler: gemeinsame Datei für Meine Farben, '' = kein Farbwähler
+        private readonly string $colorFile = '',
     ) {
     }
 
@@ -42,14 +44,20 @@ final class Dashboard
         if (!$this->guard->canManage()) {
             return ['html' => '<p class="alert alert-danger">Dafür fehlt die Berechtigung.</p>', 'deliver' => null];
         }
+        // Farbwähler speichert per fetch, Antwort ist egal
+        if ($this->colorFile !== '' && ColorPicker::handle($method, $post, $this->guard, $this->colorFile)) {
+            return ['html' => '', 'deliver' => null];
+        }
         $msg = $this->installAction($method, $post) ?? $this->licenseAction($method, $post) ?? '';
-        $this->ping();
         $upd = $this->updatesHtml($method, $post);
         if ($upd['deliver'] !== null) {
             return ['html' => '', 'deliver' => $upd['deliver']];
         }
+        $html = $this->html($today, $upd['html'], $msg);
+        // ping erst NACH der Update-Prüfung: die meldet schon (setzt last_ping) > sonst 2 Anfragen (Befund Codex-Review Suche)
+        $this->ping();
 
-        return ['html' => $this->html($today, $upd['html'], $msg), 'deliver' => null];
+        return ['html' => $html, 'deliver' => null];
     }
 
     public function html(string $today, string $updatesHtml = '', string $message = ''): string
@@ -74,8 +82,10 @@ final class Dashboard
         if ($this->license !== null && $this->license->enabled()) {
             $out .= self::section('license', 'Lizenz', LicenseView::html($this->license, $this->product, $this->guard));
         }
+        // Farbwähler gilt für die ganze Plugin-Seite (auch Tab Einstellungen)
+        $color = $this->colorFile !== '' ? ColorPicker::html($this->colorFile) : '';
 
-        return $out . '</div>';
+        return $out . '</div>' . $color;
     }
 
     // Schalter "Installation melden", CSRF + Recht vorher (Settings::handle prüft das nicht selbst)
