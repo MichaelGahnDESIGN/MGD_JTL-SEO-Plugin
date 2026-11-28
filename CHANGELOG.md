@@ -2,6 +2,10 @@
 
 Alle relevanten Änderungen an MGD JTL SEO & PageSpeed werden hier dokumentiert.
 
+## [2.2.0] - 2026-11-28
+
+- Baukasten 1.17.0: Farbwähler, Updater und Weitere Plugins verbessert.
+
 ## [2.1.1] - 2026-11-25
 
 - Aktueller Baukasten, einheitliche Version.
